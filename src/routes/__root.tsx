@@ -10,12 +10,16 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../shared/integrations/tanstack-query/devtools'
 
 import type { QueryClient } from '@tanstack/react-query'
+<<<<<<< HEAD
 import { MobileWrapper } from '@/components/mobile-wrapper'
 import { NavigationBarWrapper } from '@/features/layout/navigation-bar-wrapper'
 import { BackButton } from '@/features/layout/back-button'
 import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { LayoutProvider } from '@/shared/contexts/layout-context'
 import { ProfileButtonFeature } from '@/features/layout/profile-button'
+=======
+import { MobileWrapper } from '@/features/swipe/components/mobile-wrapper.tsx'
+>>>>>>> origin/main
 
 interface MyRouterContext {
   queryClient: QueryClient
