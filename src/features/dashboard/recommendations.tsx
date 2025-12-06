@@ -6,84 +6,87 @@ import { useElementSize } from '@/shared/hooks/use-element-size'
 import { RecommendationCard } from '@/shared/components/recommendation-card'
 import type { Place } from '@/shared/types/place'
 
-// Przykładowe dane - trasy zwiedzania w Bydgoszczy
+// Przykładowe dane - miejsca warte odwiedzenia w Bydgoszczy
 // W przyszłości będą filtrowane na podstawie wybranych kategorii z profile/settings
 const mockPlaces: Place[] = [
   {
     id: '1',
-    name: 'Ścieżka po Muzeach',
+    name: 'Muzeum Okręgowe im. Leona Wyczółkowskiego',
     image:
       'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
     location: 'Bydgoszcz',
     description:
-      'Odkryj bogatą historię miasta odwiedzając najważniejsze muzea Bydgoszczy',
+      'Największe muzeum w Bydgoszczy z bogatą kolekcją sztuki i eksponatów historycznych',
     category: 'Muzea',
   },
   {
     id: '2',
-    name: 'Spacer po Starówce',
+    name: 'Wyspa Młyńska',
     image:
       'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
     location: 'Bydgoszcz',
     description:
-      'Poznaj najpiękniejsze zabytki i historyczne budynki w centrum miasta',
+      'Malownicza wyspa na Brdzie z zabytkowymi spichrzami i nowoczesnymi obiektami kulturalnymi',
     category: 'Zabytki',
   },
   {
     id: '3',
-    name: 'Szlak Murali',
+    name: 'Mural "Przechodzenie przez rzekę"',
     image:
       'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&q=80',
     location: 'Bydgoszcz',
     description:
-      'Przejdź trasą po najciekawszych muralach i street art w Bydgoszczy',
+      'Jeden z najsłynniejszych murali w Bydgoszczy przedstawiający postacie przechodzące przez rzekę',
     category: 'Murale',
   },
   {
     id: '4',
-    name: 'Trasa po Kościołach',
+    name: 'Katedra św. Marcina i Mikołaja',
     image:
       'https://images.unsplash.com/photo-1519491050547-6ba5f34e834f?w=800&q=80',
     location: 'Bydgoszcz',
-    description: 'Zwiedź najważniejsze świątynie i kościoły o bogatej historii',
+    description:
+      'Główna świątynia Bydgoszczy, gotycka katedra z XIV wieku o bogatej historii',
     category: 'Kościoły',
   },
   {
     id: '5',
-    name: 'Spacer po Parkach',
+    name: 'Park im. Kazimierza Wielkiego',
     image:
       'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
     location: 'Bydgoszcz',
     description:
-      'Odpocznij na trasie przez najpiękniejsze parki i tereny zielone',
+      'Najstarszy park miejski w Bydgoszczy, idealne miejsce na spacer i odpoczynek',
     category: 'Parki',
   },
   {
     id: '6',
-    name: 'Trasa po Mostach',
+    name: 'Most Jerzego Sulimy-Kamińskiego',
     image:
       'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
     location: 'Bydgoszcz',
     description:
-      'Przejdź się po charakterystycznych mostach nad Brdą i Kanałem Bydgoskim',
+      'Charakterystyczny most nad Brdą łączący Stare Miasto z Wyspą Młyńską',
     category: 'Mosty',
   },
   {
     id: '7',
-    name: 'Szlak Fontann',
+    name: 'Fontanna "Potop"',
     image:
       'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80',
     location: 'Bydgoszcz',
-    description: 'Odkryj najpiękniejsze fontanny i rzeźby wodne w mieście',
+    description:
+      'Imponująca fontanna na Starym Rynku przedstawiająca scenę biblijną',
     category: 'Fontanny',
   },
   {
     id: '8',
-    name: 'Spacer po Placach',
+    name: 'Stary Rynek',
     image:
       'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&q=80',
     location: 'Bydgoszcz',
-    description: 'Zwiedź najważniejsze place i rynki Bydgoszczy pełne historii',
+    description:
+      'Główny plac miasta z zabytkowymi kamienicami i fontanną "Potop"',
     category: 'Place',
   },
 ]
@@ -118,7 +121,7 @@ export function Recommendations() {
         id="recommendations-heading"
         className="text-2xl font-bold mb-6 px-4 text-accent-800"
       >
-        Wybierz swój cel
+        Sprawdź coś nowego
       </h2>
       <div
         ref={containerRef}
