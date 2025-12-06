@@ -11,8 +11,8 @@ export const Route = createFileRoute('/swipe')({
 
 function RouteComponent() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [likedPlaces, setLikedPlaces] = useState<typeof PLACES_DATA>([])
-  const [dislikedPlaces, setDislikedPlaces] = useState<typeof PLACES_DATA>([])
+  const [_likedPlaces, setLikedPlaces] = useState<typeof PLACES_DATA>([])
+  const [_dislikedPlaces, setDislikedPlaces] = useState<typeof PLACES_DATA>([])
   const [triggerSwipe, setTriggerSwipe] = useState<'left' | 'right' | null>(
     null
   )
@@ -61,8 +61,8 @@ function RouteComponent() {
                 return (
                   <motion.div
                     key={index}
-                    className="absolute inset-0"
-                    style={{ zIndex: 20 - offset * 10 }}
+                    className="absolute inset-0 will-change-transform"
+                    style={{ zIndex: 20 - offset * 10, willChange: 'transform' }}
                     animate={{
                       scale: offset === 0 ? 1.02 : 1,
                     }}
