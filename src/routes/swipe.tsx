@@ -3,6 +3,7 @@ import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
 import { ActionButtons } from '@/features/swipe/components/ActionButtons'
 import { PLACES_DATA } from '@/features/swipe/data.ts'
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/swipe')({
   component: RouteComponent,
@@ -44,7 +45,7 @@ function RouteComponent() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="flex flex-col items-center gap-6 w-full">
+      <div className="flex flex-col items-center gap-6 w-[95%]">
         <div className="relative w-full max-w-md h-[600px]">
           {!hasMoreCards ? (
             <div className="flex items-center justify-center h-full text-2xl font-bold text-gray-600">
@@ -52,33 +53,33 @@ function RouteComponent() {
             </div>
           ) : (
             <>
-              {/* Stack effect - show next cards behind */}
-              {PLACES_DATA[currentIndex + 1] && (
-                <div
-                  className="absolute top-2 left-2 right-2 opacity-50 scale-95"
-                  style={{ zIndex: 0 }}
-                >
-                  <div className="w-full h-[600px] bg-white rounded-3xl shadow-xl" />
-                </div>
-              )}
-              {PLACES_DATA[currentIndex + 2] && (
-                <div
-                  className="absolute top-4 left-4 right-4 opacity-30 scale-90"
-                  style={{ zIndex: -1 }}
-                >
-                  <div className="w-full h-[600px] bg-white rounded-3xl shadow-xl" />
-                </div>
-              )}
+              {[0, 1].map((offset) => {
+                const index = currentIndex + offset
+                const card = PLACES_DATA[index]
+                if (!card) return null
 
-              {/* Current card */}
-              <SwipeableCard
-                key={currentCard.name}
-                {...currentCard}
-                onSwipeLeft={handleSwipeLeft}
-                onSwipeRight={handleSwipeRight}
-                onSwipeComplete={handleSwipeComplete}
-                triggerSwipe={triggerSwipe}
-              />
+                return (
+                  <motion.div
+                    key={index}
+                    className="absolute inset-0"
+                    style={{ zIndex: 20 - offset * 10 }}
+                    animate={{
+                      scale: offset === 0 ? 1.02 : 1,
+                    }}
+                    transition={{ duration: 0.4, ease: 'easeOut' }}
+                  >
+                    <SwipeableCard
+                      {...card}
+                      stackPosition={offset}
+                      isDraggable={offset === 0}
+                      onSwipeLeft={handleSwipeLeft}
+                      onSwipeRight={handleSwipeRight}
+                      onSwipeComplete={handleSwipeComplete}
+                      triggerSwipe={offset === 0 ? triggerSwipe : null}
+                    />
+                  </motion.div>
+                )
+              })}
             </>
           )}
         </div>
