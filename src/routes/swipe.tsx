@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PlaceCard } from '../components/PlaceCard'
-import { ActionButtons } from '../components/ActionButtons'
+import { PlaceCard } from '@/features/swipe/components/PlaceCard'
+import { ActionButtons } from '@/features/swipe/components/ActionButtons'
 
 export const Route = createFileRoute('/swipe')({
   component: RouteComponent,

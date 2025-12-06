@@ -5,7 +5,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../shared/integrations/tanstack-query/devtools'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { MobileWrapper } from '@/components/mobile-wrapper.tsx'
+import { MobileWrapper } from '@/features/swipe/components/mobile-wrapper.tsx'
 
 interface MyRouterContext {
   queryClient: QueryClient
