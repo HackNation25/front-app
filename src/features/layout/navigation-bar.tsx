@@ -3,6 +3,16 @@ import { type PropsWithChildren } from 'react'
 export const NavigationBarContainer = ({ children }: PropsWithChildren) => {
   return (
     <>
+      {/* Warstwa tła pod blurem - bg-white/20 */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-[48] border-t border-white/20 lg:left-0 lg:top-0 lg:right-auto lg:h-screen lg:w-20 lg:border-t-0 lg:border-r lg:border-r-white/20"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          height: 'var(--nav-height, 64px)',
+          width: '100%',
+          pointerEvents: 'none',
+        }}
+      />
       {/* Warstwa glass effect - całkowicie oddzielona, fixed position */}
       <div
         className="fixed bottom-0 left-0 right-0 z-[49] border-t border-white/20 shadow-2xl lg:left-0 lg:top-0 lg:right-auto lg:h-screen lg:w-20 lg:border-t-0 lg:border-r lg:border-r-white/20"

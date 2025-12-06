@@ -17,7 +17,7 @@ export interface NavigationItem {
 export const NAVIGATION_ROUTES = {
   HOME: '/',
   SWIPE: '/swipe',
-  ROUTES: '/routes',
+  PLACES: '/places',
   MAP: '/map',
   REELS: '/reels',
 } as const
@@ -36,16 +36,16 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: IconRefresh,
   },
   {
-    path: NAVIGATION_ROUTES.ROUTES,
-    label: 'Trasy',
-    ariaLabel: 'Przejdź do Trasy',
-    icon: IconRoute,
-  },
-  {
     path: NAVIGATION_ROUTES.MAP,
     label: 'Mapka',
     ariaLabel: 'Przejdź do Mapka',
     icon: IconMapPin,
+  },
+  {
+    path: NAVIGATION_ROUTES.PLACES,
+    label: 'Miejsca',
+    ariaLabel: 'Przejdź do Miejsca',
+    icon: IconRoute,
   },
   {
     path: NAVIGATION_ROUTES.REELS,
@@ -54,4 +54,3 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     icon: IconPlayerPlay,
   },
 ] as const
-
