@@ -10,9 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SwipeRouteRouteImport } from './routes/swipe/route'
-import { Route as RoutesRouteRouteImport } from './routes/routes/route'
 import { Route as ReelsRouteRouteImport } from './routes/reels/route'
 import { Route as ProfileRouteRouteImport } from './routes/profile/route'
+import { Route as PlacesRouteRouteImport } from './routes/places/route'
 import { Route as MapRouteRouteImport } from './routes/map/route'
 import { Route as IndexRouteRouteImport } from './routes/index/route'
 import { Route as ProfileSettingsRouteRouteImport } from './routes/profile/settings/route'
@@ -23,11 +23,6 @@ const SwipeRouteRoute = SwipeRouteRouteImport.update({
   path: '/swipe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RoutesRouteRoute = RoutesRouteRouteImport.update({
-  id: '/routes',
-  path: '/routes',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ReelsRouteRoute = ReelsRouteRouteImport.update({
   id: '/reels',
   path: '/reels',
@@ -36,6 +31,11 @@ const ReelsRouteRoute = ReelsRouteRouteImport.update({
 const ProfileRouteRoute = ProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlacesRouteRoute = PlacesRouteRouteImport.update({
+  id: '/places',
+  path: '/places',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRouteRoute = MapRouteRouteImport.update({
@@ -61,18 +61,18 @@ const DemoTanstackQueryRouteRoute = DemoTanstackQueryRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/map': typeof MapRouteRoute
+  '/places': typeof PlacesRouteRoute
   '/profile': typeof ProfileRouteRouteWithChildren
   '/reels': typeof ReelsRouteRoute
-  '/routes': typeof RoutesRouteRoute
   '/swipe': typeof SwipeRouteRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRouteRoute
   '/profile/settings': typeof ProfileSettingsRouteRoute
 }
 export interface FileRoutesByTo {
   '/map': typeof MapRouteRoute
+  '/places': typeof PlacesRouteRoute
   '/profile': typeof ProfileRouteRouteWithChildren
   '/reels': typeof ReelsRouteRoute
-  '/routes': typeof RoutesRouteRoute
   '/swipe': typeof SwipeRouteRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRouteRoute
   '/profile/settings': typeof ProfileSettingsRouteRoute
@@ -81,9 +81,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRouteRoute
   '/map': typeof MapRouteRoute
+  '/places': typeof PlacesRouteRoute
   '/profile': typeof ProfileRouteRouteWithChildren
   '/reels': typeof ReelsRouteRoute
-  '/routes': typeof RoutesRouteRoute
   '/swipe': typeof SwipeRouteRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRouteRoute
   '/profile/settings': typeof ProfileSettingsRouteRoute
@@ -92,18 +92,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/map'
+    | '/places'
     | '/profile'
     | '/reels'
-    | '/routes'
     | '/swipe'
     | '/demo/tanstack-query'
     | '/profile/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/map'
+    | '/places'
     | '/profile'
     | '/reels'
-    | '/routes'
     | '/swipe'
     | '/demo/tanstack-query'
     | '/profile/settings'
@@ -111,9 +111,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/map'
+    | '/places'
     | '/profile'
     | '/reels'
-    | '/routes'
     | '/swipe'
     | '/demo/tanstack-query'
     | '/profile/settings'
@@ -122,9 +122,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRouteRoute: typeof IndexRouteRoute
   MapRouteRoute: typeof MapRouteRoute
+  PlacesRouteRoute: typeof PlacesRouteRoute
   ProfileRouteRoute: typeof ProfileRouteRouteWithChildren
   ReelsRouteRoute: typeof ReelsRouteRoute
-  RoutesRouteRoute: typeof RoutesRouteRoute
   SwipeRouteRoute: typeof SwipeRouteRoute
   DemoTanstackQueryRouteRoute: typeof DemoTanstackQueryRouteRoute
 }
@@ -136,13 +136,6 @@ declare module '@tanstack/react-router' {
       path: '/swipe'
       fullPath: '/swipe'
       preLoaderRoute: typeof SwipeRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/routes': {
-      id: '/routes'
-      path: '/routes'
-      fullPath: '/routes'
-      preLoaderRoute: typeof RoutesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reels': {
@@ -157,6 +150,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/places': {
+      id: '/places'
+      path: '/places'
+      fullPath: '/places'
+      preLoaderRoute: typeof PlacesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -205,9 +205,9 @@ const ProfileRouteRouteWithChildren = ProfileRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRouteRoute: IndexRouteRoute,
   MapRouteRoute: MapRouteRoute,
+  PlacesRouteRoute: PlacesRouteRoute,
   ProfileRouteRoute: ProfileRouteRouteWithChildren,
   ReelsRouteRoute: ReelsRouteRoute,
-  RoutesRouteRoute: RoutesRouteRoute,
   SwipeRouteRoute: SwipeRouteRoute,
   DemoTanstackQueryRouteRoute: DemoTanstackQueryRouteRoute,
 }

@@ -4,6 +4,6 @@ export interface RouteItem {
   image: string
   location: string
   description?: string
-  routePath: string // Path for router link (e.g., '/routes/1')
+  routePath?: string // Path for router link (e.g., '/routes/1')
+  externalUrl?: string // External URL that opens in new tab
 }
-
