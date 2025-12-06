@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
 import { ActionButtons } from '@/features/swipe/components/ActionButtons'
+import { PlaceDrawer } from '@/features/swipe/components/PlaceDrawer'
 import { PLACES_DATA } from '@/features/swipe/data.ts'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -16,6 +17,7 @@ function RouteComponent() {
   const [triggerSwipe, setTriggerSwipe] = useState<'left' | 'right' | null>(
     null
   )
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const currentCard = PLACES_DATA[currentIndex]
   const hasMoreCards = currentIndex < PLACES_DATA.length
@@ -88,9 +90,15 @@ function RouteComponent() {
           <ActionButtons
             onDislike={onDislike}
             onLike={onLike}
-            onInfo={() => console.log('Info clicked', currentCard)}
+            onInfo={() => setIsDrawerOpen(true)}
           />
         )}
+
+        <PlaceDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          place={currentCard}
+        />
       </div>
     </div>
   )

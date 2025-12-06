@@ -6,7 +6,7 @@ interface MobileWrapperProps {
 
 export function MobileWrapper({ children }: MobileWrapperProps) {
   return (
-    <div className="flex justify-center bg-neutral-800 h-screen">
+    <div className="flex justify-center bg-neutral-800 h-screen overflow-hidden">
       <div className="max-w-[400px] min-w-[400px] bg-neutral-600">
         {children}
       </div>
