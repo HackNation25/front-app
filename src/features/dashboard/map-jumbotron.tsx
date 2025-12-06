@@ -64,8 +64,9 @@ export function MapJumbotron() {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="text-base lg:text-lg text-foreground-200 mb-6 leading-relaxed max-w-lg"
             >
-              Przejrzyj interaktywną mapę i znajdź najciekawsze miejsca w Twojej okolicy.
-              Odkryj ukryte perełki i zaplanuj idealną trasę zwiedzania.
+              Przejrzyj interaktywną mapę ze spersonalizowanymi punktami warte
+              odwiedzenia. Odkryj miejsca dopasowane do Twoich zainteresowań i
+              preferencji.
             </motion.p>
 
             {/* CTA */}
@@ -76,7 +77,10 @@ export function MapJumbotron() {
               className="inline-flex items-center gap-2 text-primary-400 group-hover:text-primary-300 font-semibold transition-colors"
             >
               <span>Zobacz mapę</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+              <ArrowRight
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                strokeWidth={2}
+              />
             </motion.div>
           </div>
         </div>
@@ -84,4 +88,3 @@ export function MapJumbotron() {
     </motion.section>
   )
 }
-
