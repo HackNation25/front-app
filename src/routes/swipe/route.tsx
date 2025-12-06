@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
 import { ActionButtons } from '@/features/swipe/components/ActionButtons'
+import { PlaceDrawer } from '@/features/swipe/components/PlaceDrawer'
 import { PLACES_DATA } from '@/features/swipe/data.ts'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -11,11 +12,12 @@ export const Route = createFileRoute('/swipe')({
 
 function RouteComponent() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [likedPlaces, setLikedPlaces] = useState<typeof PLACES_DATA>([])
-  const [dislikedPlaces, setDislikedPlaces] = useState<typeof PLACES_DATA>([])
+  const [_likedPlaces, setLikedPlaces] = useState<typeof PLACES_DATA>([])
+  const [_dislikedPlaces, setDislikedPlaces] = useState<typeof PLACES_DATA>([])
   const [triggerSwipe, setTriggerSwipe] = useState<'left' | 'right' | null>(
     null
   )
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const currentCard = PLACES_DATA[currentIndex]
   const hasMoreCards = currentIndex < PLACES_DATA.length
@@ -61,8 +63,8 @@ function RouteComponent() {
                 return (
                   <motion.div
                     key={index}
-                    className="absolute inset-0"
-                    style={{ zIndex: 20 - offset * 10 }}
+                    className="absolute inset-0 will-change-transform"
+                    style={{ zIndex: 20 - offset * 10, willChange: 'transform' }}
                     animate={{
                       scale: offset === 0 ? 1.02 : 1,
                     }}
@@ -88,9 +90,15 @@ function RouteComponent() {
           <ActionButtons
             onDislike={onDislike}
             onLike={onLike}
-            onInfo={() => console.log('Info clicked', currentCard)}
+            onInfo={() => setIsDrawerOpen(true)}
           />
         )}
+
+        <PlaceDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          place={currentCard}
+        />
       </div>
     </div>
   )

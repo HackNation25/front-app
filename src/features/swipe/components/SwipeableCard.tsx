@@ -72,6 +72,7 @@ export function SwipeableCard({
         x,
         rotate,
         cursor: 'grab',
+        willChange: 'transform',
       }}
       drag={isDraggable ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
@@ -87,14 +88,15 @@ export function SwipeableCard({
           onSwipeComplete()
         }
       }}
-      className="absolute w-full"
+      className="absolute w-full will-change-transform"
     >
       <div className="relative w-full">
         <motion.div
           initial={false}
           animate={{ opacity: stackPosition === 1 ? 1 : 0 }}
           transition={{ duration: 0.3 }}
-          className="absolute inset-0 rounded-3xl z-10 bg-black/30 pointer-events-none"
+          className="absolute inset-0 rounded-3xl z-10 bg-black/30 pointer-events-none will-change-opacity"
+          style={{ willChange: 'opacity' }}
         />
         <PlaceCard
           name={name}
