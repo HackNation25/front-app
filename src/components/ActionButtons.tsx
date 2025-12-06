@@ -10,7 +10,7 @@ export function ActionButtons({
   onLike,
 }: ActionButtonsProps) {
   return (
-    <div className="flex items-center justify-center gap-6">
+    <div className="flex items-center justify-center gap-6 z-10">
       <button
         onClick={onDislike}
         className="w-16 h-16 bg-white rounded-full shadow-lg shadow-red-500/50 flex items-center justify-center hover:scale-110 transition-transform group"

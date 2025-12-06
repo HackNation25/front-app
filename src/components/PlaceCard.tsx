@@ -16,7 +16,7 @@ export function PlaceCard({
   distance,
 }: PlaceCardProps) {
   return (
-    <div className="relative w-full max-w-md h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <div className="relative w-full max-w-md h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden shadow-black/30">
       <div className="relative h-full w-full">
         <img src={image} alt={name} className="w-full h-full object-cover" />
 
@@ -33,7 +33,7 @@ export function PlaceCard({
                   clipRule="evenodd"
                 />
               </svg>
-              <span>{distance}</span>
+              <span className="text-nowrap">{distance}</span>
             </div>
           </div>
 
