@@ -302,8 +302,20 @@ export const NavigationBarItem = ({ item }: NavigationBarItemProps) => {
               fill="url(#splash-gradient-desktop)"
               opacity="0.6"
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.2, 1], opacity: [0, 0.6, 0.4] }}
-              transition={splashWaveConfig}
+              animate={{ scale: 1, opacity: 0.4 }}
+              transition={{
+                ...splashWaveConfig,
+                scale: {
+                  ...splashWaveConfig,
+                  type: 'spring',
+                  stiffness: 280,
+                  damping: 22, // Low damping creates natural overshoot
+                },
+                opacity: {
+                  duration: 0.5,
+                  ease: [0.4, 0, 0.2, 1],
+                },
+              }}
             />
           </motion.svg>
         </motion.div>

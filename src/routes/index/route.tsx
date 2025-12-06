@@ -1,5 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { HeroHeader } from '@/features/dashboard/hero-header'
 import { Recommendations } from '@/features/dashboard/recommendations'
+import { MapJumbotron } from '@/features/dashboard/map-jumbotron'
 import { FloatingCardsSlider } from '@/features/dashboard/floating-cards-slider'
 import type { RouteItem } from '@/shared/types/route'
 
@@ -81,8 +83,10 @@ const otherRecommendations: RouteItem[] = [
 
 function App() {
   return (
-    <div className='relative'>
+    <div className="relative">
+      <HeroHeader />
       <Recommendations />
+      <MapJumbotron />
       <FloatingCardsSlider
         title="Rekomendowane trasy"
         items={recommendedRoutes}

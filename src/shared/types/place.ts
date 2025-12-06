@@ -4,6 +4,7 @@ export interface Place {
   image: string
   location: string
   description?: string
+  category?: string
 }
 
 

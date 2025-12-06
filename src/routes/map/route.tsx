@@ -8,7 +8,7 @@ function RouteComponent() {
   return (
     <div className="min-h-screen bg-gray-800 text-foreground-50">
       <div className="max-w-6xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6">Mapa Tras</h1>
+        <h1 className="text-3xl font-bold mb-6 text-accent-800">Mapa Tras</h1>
         <div className="bg-foreground-800 rounded-lg p-6 mb-6">
           <div className="flex gap-4 mb-4">
             <input

@@ -10,16 +10,12 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../shared/integrations/tanstack-query/devtools'
 
 import type { QueryClient } from '@tanstack/react-query'
-<<<<<<< HEAD
-import { MobileWrapper } from '@/components/mobile-wrapper'
+import { MobileWrapper } from '@/features/swipe/components/mobile-wrapper'
 import { NavigationBarWrapper } from '@/features/layout/navigation-bar-wrapper'
 import { BackButton } from '@/features/layout/back-button'
 import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { LayoutProvider } from '@/shared/contexts/layout-context'
 import { ProfileButtonFeature } from '@/features/layout/profile-button'
-=======
-import { MobileWrapper } from '@/features/swipe/components/mobile-wrapper.tsx'
->>>>>>> origin/main
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -41,6 +37,12 @@ function RootComponent() {
       <LayoutProvider>
         <MobileWrapper>
           <div className="flex min-h-screen flex-col pb-20 lg:flex-row lg:pb-0 lg:pl-20">
+            {/* Logo centered at top */}
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="absolute left-1/2 top-4 z-10 h-[50px] -translate-x-1/2"
+            />
             <Suspense
               fallback={
                 <div className="flex flex-1 items-center justify-center">
@@ -48,7 +50,7 @@ function RootComponent() {
                 </div>
               }
             >
-              <div>
+              <div className="pt-[100px]">
                 <Outlet />
               </div>
             </Suspense>

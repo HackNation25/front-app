@@ -3,37 +3,88 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSlider } from '@/shared/hooks/use-slider'
 import { useElementSize } from '@/shared/hooks/use-element-size'
+import { RecommendationCard } from '@/shared/components/recommendation-card'
 import type { Place } from '@/shared/types/place'
 
-// Przykładowe dane - w przyszłości mogą pochodzić z API
+// Przykładowe dane - trasy zwiedzania w Bydgoszczy
+// W przyszłości będą filtrowane na podstawie wybranych kategorii z profile/settings
 const mockPlaces: Place[] = [
   {
     id: '1',
-    name: 'Kraków',
-    image: 'https://images.unsplash.com/photo-1531590878845-12627191e687?w=400',
-    location: 'Małopolska',
-    description: 'Historyczne miasto z pięknym rynkiem',
+    name: 'Ścieżka po Muzeach',
+    image:
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+    location: 'Bydgoszcz',
+    description:
+      'Odkryj bogatą historię miasta odwiedzając najważniejsze muzea Bydgoszczy',
+    category: 'Muzea',
   },
   {
     id: '2',
-    name: 'Warszawa',
-    image: 'https://images.unsplash.com/photo-1519473812332-b719bff50bd1?w=400',
-    location: 'Mazowsze',
-    description: 'Stolica Polski z bogatą historią',
+    name: 'Spacer po Starówce',
+    image:
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    location: 'Bydgoszcz',
+    description:
+      'Poznaj najpiękniejsze zabytki i historyczne budynki w centrum miasta',
+    category: 'Zabytki',
   },
   {
     id: '3',
-    name: 'Gdańsk',
-    image: 'https://images.unsplash.com/photo-1605236453806-6e368a10a6b1?w=400',
-    location: 'Pomorskie',
-    description: 'Nadmorskie miasto z piękną starówką',
+    name: 'Szlak Murali',
+    image:
+      'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&q=80',
+    location: 'Bydgoszcz',
+    description:
+      'Przejdź trasą po najciekawszych muralach i street art w Bydgoszczy',
+    category: 'Murale',
   },
   {
     id: '4',
-    name: 'Wrocław',
-    image: 'https://images.unsplash.com/photo-1603791440384-56cd371ee9e7?w=400',
-    location: 'Dolnośląskie',
-    description: 'Miasto mostów i krasnali',
+    name: 'Trasa po Kościołach',
+    image:
+      'https://images.unsplash.com/photo-1519491050547-6ba5f34e834f?w=800&q=80',
+    location: 'Bydgoszcz',
+    description: 'Zwiedź najważniejsze świątynie i kościoły o bogatej historii',
+    category: 'Kościoły',
+  },
+  {
+    id: '5',
+    name: 'Spacer po Parkach',
+    image:
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+    location: 'Bydgoszcz',
+    description:
+      'Odpocznij na trasie przez najpiękniejsze parki i tereny zielone',
+    category: 'Parki',
+  },
+  {
+    id: '6',
+    name: 'Trasa po Mostach',
+    image:
+      'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+    location: 'Bydgoszcz',
+    description:
+      'Przejdź się po charakterystycznych mostach nad Brdą i Kanałem Bydgoskim',
+    category: 'Mosty',
+  },
+  {
+    id: '7',
+    name: 'Szlak Fontann',
+    image:
+      'https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80',
+    location: 'Bydgoszcz',
+    description: 'Odkryj najpiękniejsze fontanny i rzeźby wodne w mieście',
+    category: 'Fontanny',
+  },
+  {
+    id: '8',
+    name: 'Spacer po Placach',
+    image:
+      'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&q=80',
+    location: 'Bydgoszcz',
+    description: 'Zwiedź najważniejsze place i rynki Bydgoszczy pełne historii',
+    category: 'Place',
   },
 ]
 
@@ -41,7 +92,14 @@ export function Recommendations() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { width: containerWidth } = useElementSize(containerRef)
 
-  const { currentIndex, next, previous, handleDragEnd, canGoNext, canGoPrevious } = useSlider({
+  const {
+    currentIndex,
+    next,
+    previous,
+    handleDragEnd,
+    canGoNext,
+    canGoPrevious,
+  } = useSlider({
     totalSlides: mockPlaces.length,
   })
 
@@ -51,16 +109,20 @@ export function Recommendations() {
   const x = containerWidth > 0 ? -currentIndex * slideWidthPx : 0
 
   // Calculate drag constraints: can drag from 0 to -(total slides - 1) * slideWidthPx
-  const maxDrag = containerWidth > 0 ? -(mockPlaces.length - 1) * slideWidthPx : 0
+  const maxDrag =
+    containerWidth > 0 ? -(mockPlaces.length - 1) * slideWidthPx : 0
 
   return (
     <section className="w-full py-6" aria-labelledby="recommendations-heading">
-      <h2 id="recommendations-heading" className="text-2xl font-bold mb-4 text-center px-4">
-        Rekomendacje
+      <h2
+        id="recommendations-heading"
+        className="text-2xl font-bold mb-6 px-4 text-accent-800"
+      >
+        Wybierz swój cel
       </h2>
       <div
         ref={containerRef}
-        className="relative overflow-hidden w-full"
+        className="relative overflow-x-hidden overflow-y-visible w-full py-4"
         role="region"
         aria-label={`Slider rekomendacji, slajd ${currentIndex + 1} z ${mockPlaces.length}`}
         aria-live="polite"
@@ -72,7 +134,11 @@ export function Recommendations() {
             x,
           }}
           drag="x"
-          dragConstraints={containerWidth > 0 ? { left: maxDrag, right: 0 } : { left: 0, right: 0 }}
+          dragConstraints={
+            containerWidth > 0
+              ? { left: maxDrag, right: 0 }
+              : { left: 0, right: 0 }
+          }
           dragElastic={0.2}
           onDragEnd={handleDragEnd}
           transition={{
@@ -81,36 +147,21 @@ export function Recommendations() {
             damping: 30,
           }}
         >
-          {mockPlaces.map((place) => (
-            <div
+          {mockPlaces.map((place, index) => (
+            <RecommendationCard
               key={place.id}
-              className="flex-shrink-0"
-              style={{
-                width: '90%',
-                minWidth: '90%',
-              }}
-            >
-              <div className="bg-white shadow-lg overflow-hidden aspect-square">
-                <div className="relative w-full h-full">
-                  <img
-                    src={place.image}
-                    alt={place.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h3 className="text-xl font-semibold mb-1">{place.name}</h3>
-                    <p className="text-sm mb-2 opacity-90">{place.location}</p>
-                    {place.description && (
-                      <p className="text-xs opacity-75">{place.description}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+              place={place}
+              index={index}
+              currentIndex={currentIndex}
+            />
           ))}
         </motion.div>
       </div>
-      <div className="flex justify-end gap-2 mt-4 px-4" role="group" aria-label="Nawigacja slidera rekomendacji">
+      <div
+        className="flex justify-end gap-3 mt-6 px-4"
+        role="group"
+        aria-label="Nawigacja slidera rekomendacji"
+      >
         <button
           onClick={previous}
           disabled={!canGoPrevious}
@@ -120,13 +171,13 @@ export function Recommendations() {
               ? `Przejdź do poprzedniego slajdu. Obecnie slajd ${currentIndex + 1} z ${mockPlaces.length}`
               : `Nie można przejść do poprzedniego slajdu. Obecnie slajd ${currentIndex + 1} z ${mockPlaces.length}`
           }
-          className={`bg-white/80 rounded-full p-2 shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+          className={`rounded-full p-3 shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
             canGoPrevious
-              ? 'hover:bg-white cursor-pointer opacity-100'
-              : 'cursor-not-allowed opacity-40'
+              ? 'bg-primary-500 hover:bg-primary-600 cursor-pointer opacity-100 hover:scale-110 active:scale-95'
+              : 'bg-foreground-600 cursor-not-allowed opacity-40'
           }`}
         >
-          <ChevronLeft className="w-6 h-6" aria-hidden="true" />
+          <ChevronLeft className="w-6 h-6 text-white" aria-hidden="true" />
         </button>
 
         <button
@@ -138,16 +189,15 @@ export function Recommendations() {
               ? `Przejdź do następnego slajdu. Obecnie slajd ${currentIndex + 1} z ${mockPlaces.length}`
               : `Nie można przejść do następnego slajdu. Obecnie slajd ${currentIndex + 1} z ${mockPlaces.length}`
           }
-          className={`bg-white/80 rounded-full p-2 shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+          className={`rounded-full p-3 shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
             canGoNext
-              ? 'hover:bg-white cursor-pointer opacity-100'
-              : 'cursor-not-allowed opacity-40'
+              ? 'bg-primary-500 hover:bg-primary-600 cursor-pointer opacity-100 hover:scale-110 active:scale-95'
+              : 'bg-foreground-600 cursor-not-allowed opacity-40'
           }`}
         >
-          <ChevronRight className="w-6 h-6" aria-hidden="true" />
+          <ChevronRight className="w-6 h-6 text-white" aria-hidden="true" />
         </button>
       </div>
     </section>
   )
 }
-

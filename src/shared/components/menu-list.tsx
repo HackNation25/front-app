@@ -81,9 +81,24 @@ export function MenuList({
                     rotate: isActive ? [0, -5, 5, 0] : 0,
                   }}
                   transition={{
-                    type: 'spring',
-                    stiffness: 400,
-                    damping: 20,
+                    scale: {
+                      type: 'spring',
+                      stiffness: 400,
+                      damping: 20,
+                    },
+                    rotate: isActive
+                      ? {
+                          type: 'keyframes',
+                          values: [0, -5, 5, 0],
+                          times: [0, 0.33, 0.66, 1],
+                          duration: 0.6,
+                          ease: [0.16, 1, 0.3, 1],
+                        }
+                      : {
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 20,
+                        },
                   }}
                 >
                   <Icon
@@ -139,4 +154,3 @@ export function MenuList({
     </nav>
   )
 }
-

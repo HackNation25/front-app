@@ -64,3 +64,16 @@ code {
   --color-accent-800: #c62828;
   --color-accent-900: #b71c1c;
 }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}

@@ -83,7 +83,7 @@ export const NavigationBarItemV2 = ({ item }: NavigationBarItemV2Props) => {
           initial={{ scale: 0, y: 0, opacity: 0 }}
           animate={{
             scale: 1,
-            y: [-10, -7, -9], // Wyrzucenie do góry z bounce - zmniejszone dla mobile
+            y: -9, // Wyrzucenie do góry - spring naturally creates bounce
             opacity: 1,
           }}
           exit={{ scale: 0, y: 0, opacity: 0 }}
@@ -98,8 +98,7 @@ export const NavigationBarItemV2 = ({ item }: NavigationBarItemV2Props) => {
               ...bounceUpConfig,
               type: 'spring',
               stiffness: 300,
-              damping: 10,
-              times: [0, 0.6, 1],
+              damping: 10, // Low damping creates natural bounce
             },
             opacity: {
               duration: 0.15,
@@ -112,13 +111,13 @@ export const NavigationBarItemV2 = ({ item }: NavigationBarItemV2Props) => {
             className="h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 shadow-lg shadow-primary-500/40 flex items-center justify-center group-focus-within:outline-2 group-focus-within:outline-accent-500 group-focus-within:outline-offset-2"
             initial={{ scale: 0 }}
             animate={{
-              scale: [0, 1.2, 1], // Lekki overshoot dla efektu "pop"
+              scale: 1, // Spring naturally creates overshoot with low damping
             }}
             transition={{
               ...bubblePopConfig,
               type: 'spring',
               stiffness: 600,
-              damping: 20,
+              damping: 20, // Low damping creates natural overshoot/bounce
             }}
           >
             {/* Ikona w środku */}
