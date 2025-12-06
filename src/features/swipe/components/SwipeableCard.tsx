@@ -18,6 +18,8 @@ interface SwipeableCardProps {
   onSwipeRight: () => void
   onSwipeComplete: () => void
   triggerSwipe?: 'left' | 'right' | null
+  stackPosition?: number
+  isDraggable: boolean
 }
 
 const SWIPE_THRESHOLD = 100
@@ -33,6 +35,8 @@ export function SwipeableCard({
   onSwipeRight,
   onSwipeComplete,
   triggerSwipe,
+  stackPosition,
+  isDraggable,
 }: SwipeableCardProps) {
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-200, 200], [-25, 25])
@@ -69,7 +73,7 @@ export function SwipeableCard({
         rotate,
         cursor: 'grab',
       }}
-      drag="x"
+      drag={isDraggable ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={handleDragEnd}
       whileDrag={{ cursor: 'grabbing' }}
@@ -86,6 +90,12 @@ export function SwipeableCard({
       className="absolute w-full"
     >
       <div className="relative w-full">
+        <motion.div
+          initial={false}
+          animate={{ opacity: stackPosition === 1 ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 rounded-3xl z-10 bg-black/30 pointer-events-none"
+        />
         <PlaceCard
           name={name}
           image={image}
