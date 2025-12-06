@@ -6,7 +6,7 @@ export const Route = createFileRoute('/profile')({
 
 function ProfileLayout() {
   return (
-    <div className="min-h-screen bg-gray-800 text-foreground-50">
+    <div className="min-h-screen text-foreground-50">
       <div className="max-w-4xl mx-auto py-8 px-4">
         <div className="bg-foreground-800 rounded-lg p-6 mb-6">
           <div className="flex items-center gap-4 mb-4">
@@ -19,8 +19,8 @@ function ProfileLayout() {
             </div>
           </div>
           <p className="text-foreground-200 mb-4">
-            Miłośnik podróży i odkrywania nowych miejsc. Uwielbiam górskie wędrówki
-            i odkrywanie lokalnych atrakcji.
+            Miłośnik podróży i odkrywania nowych miejsc. Uwielbiam górskie
+            wędrówki i odkrywanie lokalnych atrakcji.
           </p>
           <div className="flex gap-6 text-sm">
             <div>

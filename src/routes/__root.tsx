@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import {
   createRootRouteWithContext,
   useMatchRoute,
@@ -16,6 +16,7 @@ import { BackButton } from '@/features/layout/back-button'
 import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { LayoutProvider } from '@/shared/contexts/layout-context'
 import { ProfileButtonFeature } from '@/features/layout/profile-button'
+import { ScreenSizeBlocker } from '@/shared/components/screen-size-blocker'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -31,6 +32,45 @@ function RootComponent() {
     to: NAVIGATION_ROUTES.SWIPE,
     fuzzy: false,
   })
+
+  const [screenWidth, setScreenWidth] = useState(0)
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setScreenWidth(window.innerWidth)
+    }
+
+    // Check on mount
+    checkScreenSize()
+
+    // Check on resize
+    window.addEventListener('resize', checkScreenSize)
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize)
+    }
+  }, [])
+
+  // Show blocker instead of app if screen width is greater than 1024px
+  if (screenWidth > 1024) {
+    return (
+      <>
+        <ScreenSizeBlocker />
+        <TanStackDevtools
+          config={{
+            position: 'bottom-right',
+          }}
+          plugins={[
+            {
+              name: 'Tanstack Router',
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+            TanStackQueryDevtools,
+          ]}
+        />
+      </>
+    )
+  }
 
   return (
     <>

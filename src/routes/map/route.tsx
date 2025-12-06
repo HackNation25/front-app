@@ -6,7 +6,7 @@ export const Route = createFileRoute('/map')({
 
 function RouteComponent() {
   return (
-    <div className="min-h-screen bg-gray-800 text-foreground-50">
+    <div className="min-h-screen text-foreground-50">
       <div className="max-w-6xl mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-6 text-accent-800">Mapa Tras</h1>
         <div className="bg-foreground-800 rounded-lg p-6 mb-6">
