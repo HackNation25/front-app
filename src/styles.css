@@ -1,15 +1,79 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 body {
   @apply m-0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--color-gray-800);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+@theme {
+  /* Foreground - ciemna skala dla tekstu */
+  --color-foreground-50: #f5f5f5;
+  --color-foreground-100: #e0e0e0;
+  --color-foreground-200: #bdbdbd;
+  --color-foreground-300: #9e9e9e;
+  --color-foreground-400: #757575;
+  --color-foreground-500: #616161;
+  --color-foreground-600: #424242;
+  --color-foreground-700: #2c2c2c;
+  --color-foreground-800: #1a1a1a;
+  --color-foreground-900: #0a0a0a;
+
+  /* Primary - niebieski z logo */
+  --color-primary-50: #e3f2fd;
+  --color-primary-100: #bbdefb;
+  --color-primary-200: #90caf9;
+  --color-primary-300: #64b5f6;
+  --color-primary-400: #42a5f5;
+  --color-primary-500: #2196f3;
+  --color-primary-600: #1e88e5;
+  --color-primary-700: #1976d2;
+  --color-primary-800: #1565c0;
+  --color-primary-900: #0d47a1;
+
+  /* Secondary - żółty z logo */
+  --color-secondary-50: #fffde7;
+  --color-secondary-100: #fff9c4;
+  --color-secondary-200: #fff59d;
+  --color-secondary-300: #fff176;
+  --color-secondary-400: #ffee58;
+  --color-secondary-500: #ffeb3b;
+  --color-secondary-600: #fdd835;
+  --color-secondary-700: #fbc02d;
+  --color-secondary-800: #f9a825;
+  --color-secondary-900: #f57f17;
+
+  /* Accent - czerwony z logo */
+  --color-accent-50: #ffebee;
+  --color-accent-100: #ffcdd2;
+  --color-accent-200: #ef9a9a;
+  --color-accent-300: #e57373;
+  --color-accent-400: #ef5350;
+  --color-accent-500: #f44336;
+  --color-accent-600: #e53935;
+  --color-accent-700: #d32f2f;
+  --color-accent-800: #c62828;
+  --color-accent-900: #b71c1c;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
 }
