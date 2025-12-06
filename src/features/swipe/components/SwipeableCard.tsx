@@ -90,9 +90,12 @@ export function SwipeableCard({
       className="absolute w-full"
     >
       <div className="relative w-full">
-        {stackPosition === 1 && (
-          <div className="absolute inset-0 rounded-3xl z-10 bg-black/30" />
-        )}
+        <motion.div
+          initial={false}
+          animate={{ opacity: stackPosition === 1 ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 rounded-3xl z-10 bg-black/30 pointer-events-none"
+        />
         <PlaceCard
           name={name}
           image={image}
