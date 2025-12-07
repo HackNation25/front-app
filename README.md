@@ -1,21 +1,21 @@
-<div style="background-color: #0066ff; color: #ffff00; padding: 20px; border-radius: 8px; margin-bottom: 30px; font-weight: bold; font-size: 18px;">
-
-# 🚨 TODO - PILNE DO NAPRAWY 🚨
-
-1. **ODBUGOWAĆ JAK DZIAŁA RECOMMENDATIONS** - jakoś chujowo fetchuje, poniosło AI 😤
-2. Doszlifować UI
-3. Przenieść guzik "Wygeneruj mapę" (może gdzie indziej?)
-
-</div>
-
 Welcome to your new TanStack app!
 
-# Getting Started
+# O repozytorium
 
-To run this application:
+To repozytorium zawiera **frontend aplikacji webowej** – inteligentnego przewodnika po Bydgoszczy.
+Projekt jest zbudowany w **React + TypeScript** z wykorzystaniem **Vite**, **TanStack Router** i **TanStack Query**. Ten kod odpowiada za interfejs użytkownika: ekran swipe do wyboru atrakcji, widok
+mapy z punktami POI, listę miejsc oraz konfigurację komunikacji z backendowym API (Nest.js).
 
+
+# Uruchomienie
+
+1. Zainstaluj pnpm: https://pnpm.io/installation
+2.
 ```bash
 pnpm install
+```
+3.
+```bash
 pnpm start
 ```
 
@@ -41,7 +41,8 @@ This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
 
 ## Linting & Formatting
 
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured
+using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
 
 ```bash
 pnpm lint
@@ -66,7 +67,7 @@ Now that you have two routes you can use a `Link` component to navigate between 
 To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
 
 ```tsx
-import { Link } from '@tanstack/react-router'
+import {Link} from '@tanstack/react-router'
 ```
 
 Then anywhere in your JSX you can use it like so:
@@ -81,15 +82,16 @@ More information on the `Link` component can be found in the [Link documentation
 
 ### Using A Layout
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
+In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you
+use the `<Outlet />` component.
 
 Here is an example layout that includes a header:
 
 ```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import {Outlet, createRootRoute} from '@tanstack/react-router'
+import {TanStackRouterDevtools} from '@tanstack/react-router-devtools'
 
-import { Link } from '@tanstack/react-router'
+import {Link} from '@tanstack/react-router'
 
 export const Route = createRootRoute({
   component: () => (
@@ -100,8 +102,8 @@ export const Route = createRootRoute({
           <Link to="/about">About</Link>
         </nav>
       </header>
-      <Outlet />
-      <TanStackRouterDevtools />
+      <Outlet/>
+      <TanStackRouterDevtools/>
     </>
   ),
 })
@@ -113,7 +115,8 @@ More information on layouts can be found in the [Layouts documentation](https://
 
 ## Data Fetching
 
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
+There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load
+the data for a route before it's rendered.
 
 For example:
 
@@ -142,7 +145,8 @@ const peopleRoute = createRoute({
 })
 ```
 
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
+Loaders simplify your data fetching logic dramatically. Check out more information in
+the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
 
 ### React-Query
 
@@ -157,7 +161,7 @@ pnpm add @tanstack/react-query @tanstack/react-query-devtools
 Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
 
 ```tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 // ...
 
@@ -170,7 +174,7 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}/>
     </QueryClientProvider>
   )
 }
@@ -179,14 +183,14 @@ if (!rootElement.innerHTML) {
 You can also add TanStack Query Devtools to the root route (optional).
 
 ```tsx
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 
 const rootRoute = createRootRoute({
   component: () => (
     <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
+      <Outlet/>
+      <ReactQueryDevtools buttonPosition="top-right"/>
+      <TanStackRouterDevtools/>
     </>
   ),
 })
@@ -195,12 +199,12 @@ const rootRoute = createRootRoute({
 Now you can use `useQuery` to fetch your data.
 
 ```tsx
-import { useQuery } from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 
 import './App.css'
 
 function App() {
-  const { data } = useQuery({
+  const {data} = useQuery({
     queryKey: ['people'],
     queryFn: () =>
       fetch('https://swapi.dev/api/people')
@@ -238,8 +242,8 @@ pnpm add @tanstack/store
 Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
 
 ```tsx
-import { useStore } from '@tanstack/react-store'
-import { Store } from '@tanstack/store'
+import {useStore} from '@tanstack/react-store'
+import {Store} from '@tanstack/store'
 import './App.css'
 
 const countStore = new Store(0)
@@ -263,8 +267,8 @@ One of the many nice features of TanStack Store is the ability to derive state f
 Let's check this out by doubling the count using derived state.
 
 ```tsx
-import { useStore } from '@tanstack/react-store'
-import { Store, Derived } from '@tanstack/store'
+import {useStore} from '@tanstack/react-store'
+import {Store, Derived} from '@tanstack/store'
 import './App.css'
 
 const countStore = new Store(0)
