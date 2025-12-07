@@ -14,7 +14,7 @@ export const createMinimalistMarker = (
 
   switch (markerType) {
     case 'user':
-      color = '#f44336' // accent-500 (red) from styles.css
+      color = 'var(--color-green-500)' // accent-500 (red) from styles.css
       break
     case 'selected':
       color = '#3B82F6' // blue-500
