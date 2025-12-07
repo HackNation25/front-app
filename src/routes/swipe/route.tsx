@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
 import { ActionButtons } from '@/features/swipe/components/ActionButtons'
-import { PlaceDrawer } from '@/features/swipe/components/PlaceDrawer'
+import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'

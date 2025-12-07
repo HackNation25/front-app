@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { List } from 'lucide-react'
 import { PLACES_DATA } from '@/features/swipe/data'
 import { MapControls } from '@/features/swipe/components/MapControls'
 import { createMinimalistMarker } from '@/features/swipe/components/MapMarker'
@@ -19,6 +20,30 @@ function RouteComponent() {
   >(null)
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false)
   const [drawerView, setDrawerView] = useState<DrawerView>('list')
+  const [rightOffset, setRightOffset] = useState(() => {
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0
+    if (viewportWidth >= 500) {
+      const offset = (viewportWidth - 500) / 2 + 16
+      return `${offset}px`
+    }
+    return '1rem'
+  })
+
+  useEffect(() => {
+    const updateOffset = () => {
+      const viewportWidth = window.innerWidth
+      if (viewportWidth >= 500) {
+        const offset = (viewportWidth - 500) / 2 + 16
+        setRightOffset(`${offset}px`)
+      } else {
+        setRightOffset('1rem')
+      }
+    }
+
+    updateOffset()
+    window.addEventListener('resize', updateOffset)
+    return () => window.removeEventListener('resize', updateOffset)
+  }, [])
 
   return (
     <div className="h-screen w-full relative bg-white">
@@ -71,11 +96,28 @@ function RouteComponent() {
         onViewChange={setDrawerView}
         places={PLACES_DATA}
         onPlaceSelect={(place) => {
-          setSelectedPlace(place)
-          setDrawerView('details')
-          setIsDrawerExpanded(true)
+          // Find the full place object with coords from PLACES_DATA
+          const fullPlace = PLACES_DATA.find((p) => p.name === place.name)
+          if (fullPlace) {
+            setSelectedPlace(fullPlace)
+            setDrawerView('details')
+            setIsDrawerExpanded(true)
+          }
         }}
       />
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => {
+          setDrawerView('list')
+          setIsDrawerExpanded(true)
+        }}
+        className="fixed bottom-[64px] sm:bottom-[80px] z-50 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center w-14 h-14"
+        style={{ right: rightOffset }}
+        aria-label="Otwórz listę miejsc"
+      >
+        <List className="w-6 h-6" />
+      </button>
     </div>
   )
 }
