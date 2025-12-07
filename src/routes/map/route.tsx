@@ -3,9 +3,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { PLACES_DATA } from '@/features/swipe/data'
-import { PlaceDrawer } from '@/features/swipe/components/PlaceDrawer'
 import { MapControls } from '@/features/swipe/components/MapControls'
 import { createMinimalistMarker } from '@/features/swipe/components/MapMarker'
+import { MapDrawer } from '@/features/map/components/MapDrawer.tsx'
+
+type DrawerView = 'list' | 'details'
 
 export const Route = createFileRoute('/map')({
   component: RouteComponent,
@@ -15,7 +17,8 @@ function RouteComponent() {
   const [selectedPlace, setSelectedPlace] = useState<
     (typeof PLACES_DATA)[number] | null
   >(null)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false)
+  const [drawerView, setDrawerView] = useState<DrawerView>('list')
 
   return (
     <div className="h-screen w-full relative bg-white">
@@ -51,17 +54,27 @@ function RouteComponent() {
             eventHandlers={{
               click: () => {
                 setSelectedPlace(place)
-                setIsDrawerOpen(true)
+                setDrawerView('details')
+                setIsDrawerExpanded(true)
               },
             }}
           />
         ))}
       </MapContainer>
 
-      <PlaceDrawer
+      <MapDrawer
         place={selectedPlace}
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        isOpen={isDrawerExpanded}
+        onClose={() => setIsDrawerExpanded(false)}
+        onOpen={() => setIsDrawerExpanded(true)}
+        view={drawerView}
+        onViewChange={setDrawerView}
+        places={PLACES_DATA}
+        onPlaceSelect={(place) => {
+          setSelectedPlace(place)
+          setDrawerView('details')
+          setIsDrawerExpanded(true)
+        }}
       />
     </div>
   )

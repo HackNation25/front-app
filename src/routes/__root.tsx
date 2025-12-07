@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   createRootRouteWithContext,
   useMatchRoute,
@@ -17,6 +17,7 @@ import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { LayoutProvider } from '@/shared/contexts/layout-context'
 import { ProfileButtonFeature } from '@/features/layout/profile-button'
 import { ScreenSizeBlocker } from '@/shared/components/screen-size-blocker'
+import { AppHeader } from '@/features/dashboard/header.tsx'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -30,6 +31,11 @@ function RootComponent() {
   const matchRoute = useMatchRoute()
   const isSwipeRoute = !!matchRoute({
     to: NAVIGATION_ROUTES.SWIPE,
+    fuzzy: false,
+  })
+
+  const isMapRoute = !!matchRoute({
+    to: NAVIGATION_ROUTES.MAP,
     fuzzy: false,
   })
 
@@ -76,36 +82,18 @@ function RootComponent() {
     <>
       <LayoutProvider>
         <MobileWrapper>
-          <div className="flex min-h-screen flex-col pb-20 lg:flex-row lg:pb-0 lg:pl-20">
-            {/* Logo centered at top */}
-            <img
-              src="/logo.png"
-              alt="Logo"
-              className="absolute left-1/2 top-4 z-10 h-[50px] -translate-x-1/2"
-            />
-            <Suspense
-              fallback={
-                <div className="flex flex-1 items-center justify-center">
-                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-foreground-200 border-t-primary-600" />
-                </div>
-              }
-            >
-              <div className="flex-1 flex items-center justify-center pt-[100px]">
-                <div className="w-full">
-                  <Outlet />
-                </div>
-              </div>
-            </Suspense>
-          </div>
+          <AppHeader enabled={!isMapRoute}>
+            <Outlet />
+          </AppHeader>
 
           {/* Navbar wrapper with Activity and Framer Motion animations */}
-          <NavigationBarWrapper isVisible={!isSwipeRoute} />
+          <NavigationBarWrapper isVisible={!isSwipeRoute && !isMapRoute} />
 
           {/* Back button - appears only on /swipe route */}
-          <BackButton isVisible={isSwipeRoute} />
+          <BackButton isVisible={isSwipeRoute || isMapRoute} />
 
           {/* Profile button - floating icon in top-right corner */}
-          <ProfileButtonFeature />
+          {!isMapRoute && <ProfileButtonFeature />}
         </MobileWrapper>
       </LayoutProvider>
 
