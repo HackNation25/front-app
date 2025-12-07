@@ -3,7 +3,7 @@ export interface Poi {
   name: string
   shortDescription: string
   longDescription: string
-  image: string
+  imageUrl: string
   popularity: number
   locationX: number
   locationY: number

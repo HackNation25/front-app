@@ -54,7 +54,7 @@ function RouteComponent() {
             icon={createMinimalistMarker(selectedPlace?.name === place.name)}
             eventHandlers={{
               click: () => {
-                setSelectedPlace(place as any)
+                setSelectedPlace(place)
                 setDrawerView('details')
                 setIsDrawerExpanded(true)
               },
@@ -70,7 +70,7 @@ function RouteComponent() {
         onOpen={() => setIsDrawerExpanded(true)}
         view={drawerView}
         onViewChange={setDrawerView}
-        places={poi as any}
+        places={poi}
         onPlaceSelect={(place) => {
           setSelectedPlace(place)
           setDrawerView('details')

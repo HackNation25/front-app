@@ -14,14 +14,14 @@ export function AttractionsList({
   return (
     <div className="p-4 space-y-2">
       <h2 className="text-lg font-semibold text-gray-900 mb-3">Attractions</h2>
-      {places.map((place) => (
+      {places?.map((place) => (
         <div
           key={place.name}
           onClick={() => onPlaceSelect(place)}
           className="flex gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
         >
           <img
-            src={String(place.image)}
+            src={String(place.imageUrl)}
             alt={place.name}
             className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
           />

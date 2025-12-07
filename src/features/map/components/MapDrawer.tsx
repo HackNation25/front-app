@@ -76,7 +76,7 @@ export function MapDrawer({
             <>
               {/* Hero image */}
               <img
-                src={place.image}
+                src={place.imageUrl}
                 alt={place.name}
                 className="w-full h-24 aspect-video object-cover"
               />
