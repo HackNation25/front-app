@@ -11,7 +11,7 @@ interface MapDrawerProps {
   onOpen: () => void
   view: DrawerView
   onViewChange: (view: DrawerView) => void
-  places: Array<Poi>
+  places: Array<Poi> | undefined
   place: Poi | null
   onPlaceSelect: (place: Poi) => void
 }

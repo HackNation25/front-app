@@ -1,7 +1,7 @@
 import type { Poi } from '@/shared/types/poi.ts'
 
 interface AttractionsListProps {
-  places: Poi[]
+  places: Poi[] | undefined
   onPlaceSelect: (place: Poi) => void
 }
 
