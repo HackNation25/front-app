@@ -1,11 +1,10 @@
-Welcome to your new TanStack app!
-
 # O repozytorium
 
 To repozytorium zawiera **frontend aplikacji webowej** – inteligentnego przewodnika po Bydgoszczy.
 Projekt jest zbudowany w **React + TypeScript** z wykorzystaniem **Vite**, **TanStack Router** i **TanStack Query**. Ten kod odpowiada za interfejs użytkownika: ekran swipe do wyboru atrakcji, widok
 mapy z punktami POI, listę miejsc oraz konfigurację komunikacji z backendowym API (Nest.js).
 
+### Film demo [YouTube](https://youtube.com/shorts/KCpQbbl4B1s)
 
 # Uruchomienie
 
