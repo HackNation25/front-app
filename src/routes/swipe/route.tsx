@@ -46,7 +46,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4">
       <div className="flex flex-col items-center gap-6 w-[95%]">
         <div className="relative w-full max-w-md h-[600px]">
           {!hasMoreCards ? (
@@ -64,7 +64,10 @@ function RouteComponent() {
                   <motion.div
                     key={index}
                     className="absolute inset-0 will-change-transform"
-                    style={{ zIndex: 20 - offset * 10, willChange: 'transform' }}
+                    style={{
+                      zIndex: 20 - offset * 10,
+                      willChange: 'transform',
+                    }}
                     animate={{
                       scale: offset === 0 ? 1.02 : 1,
                     }}

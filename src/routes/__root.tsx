@@ -90,8 +90,10 @@ function RootComponent() {
                 </div>
               }
             >
-              <div className="pt-[100px]">
-                <Outlet />
+              <div className="flex-1 flex items-center justify-center pt-[100px]">
+                <div className="w-full">
+                  <Outlet />
+                </div>
               </div>
             </Suspense>
           </div>
