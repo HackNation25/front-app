@@ -2,8 +2,9 @@
   "name": "front-app",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite",
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run",

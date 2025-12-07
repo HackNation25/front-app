@@ -75,6 +75,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all categories */
+        get: operations["CategoryController_getAll"];
+        put?: never;
+        /** Create a new category */
+        post: operations["CategoryController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/category/{id}": {
         parameters: {
             query?: never;
@@ -86,24 +104,6 @@ export interface paths {
         get: operations["CategoryController_getById"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/category": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all categories */
-        get: operations["CategoryController_findAll"];
-        put?: never;
-        /** Create a new category */
-        post: operations["CategoryController_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -326,6 +326,11 @@ export interface components {
              * @example Sports
              */
             name: string;
+            /**
+             * @description Hex color code for the category (e.g., #RRGGBB)
+             * @example #FF5733
+             */
+            colorHex: string;
             /**
              * @description Publicly accessible URL to the category image
              * @example https://picsum.photos/200/300
@@ -564,30 +569,7 @@ export interface operations {
             };
         };
     };
-    CategoryController_getById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category ID (UUID) */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Category found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoryEntity"];
-                };
-            };
-        };
-    };
-    CategoryController_findAll: {
+    CategoryController_getAll: {
         parameters: {
             query?: never;
             header?: never;
@@ -636,6 +618,29 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    CategoryController_getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Category ID (UUID) */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Category found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryEntity"];
+                };
             };
         };
     };
