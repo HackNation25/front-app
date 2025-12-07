@@ -1,7 +1,7 @@
 import { Drawer } from 'vaul'
 import { AttractionsList } from './AttractionsList'
-import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
 import type { Poi } from '@/shared/types/poi.ts'
+import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
 
 type DrawerView = 'list' | 'details'
 
@@ -11,7 +11,7 @@ interface MapDrawerProps {
   onOpen: () => void
   view: DrawerView
   onViewChange: (view: DrawerView) => void
-  places: Poi[] | undefined
+  places: Array<Poi> | undefined
   place: Poi | null
   onPlaceSelect: (place: Poi) => void
   onShowAll?: () => void
@@ -36,8 +36,8 @@ export function MapDrawer({
         poiId: place.uuid,
         name: place.name,
         image: place.imageUrl,
-        description: place.shortDescription || place.longDescription || '',
-        tags: [] as string[],
+        description: place.longDescription || place.shortDescription || '',
+        tags: [] as Array<string>,
         location:
           place.locationX && place.locationY
             ? `${place.locationX}, ${place.locationY}`

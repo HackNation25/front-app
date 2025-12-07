@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import type { Poi } from '@/shared/types/poi.ts'
 
@@ -85,9 +85,9 @@ export function MapPopover({ place, onShowMore, onClose }: MapPopoverProps) {
             <h3 className="text-lg font-bold text-gray-900 mb-1 pr-6">
               {place.name}
             </h3>
-            {place.shortDescription && (
+            {place.longDescription && (
               <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                {place.shortDescription}
+                {place.longDescription}
               </p>
             )}
 

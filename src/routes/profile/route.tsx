@@ -1,8 +1,8 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { useUserSessionContext } from '@/shared/contexts/user-session-context'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import toast from 'react-hot-toast'
+import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 
 export const Route = createFileRoute('/profile')({
   component: ProfileLayout,
@@ -42,7 +42,7 @@ function ProfileLayout() {
 
   return (
     <div className="min-h-screen text-foreground-50">
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="max-w-4xl mx-auto py-8 px-2">
         {shouldShowResetMenu && (
           <div className="bg-foreground-800 rounded-lg p-6 mb-6">
             <h2 className="text-2xl font-bold mb-4">Menu</h2>

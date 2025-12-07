@@ -7,7 +7,7 @@ export const Route = createFileRoute('/profile/settings')({
 
 function ProfileSettings() {
   return (
-    <div className="max-w-2xl mx-auto py-6 px-4">
+    <div className="max-w-2xl mx-auto py-6 px-2">
       <ProfileCategorySelection />
     </div>
   )

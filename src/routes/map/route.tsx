@@ -1,7 +1,10 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
-import { createFileRoute, useSearch, useNavigate } from '@tanstack/react-router'
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { List } from 'lucide-react'
+import { useQueries } from '@tanstack/react-query'
+import type { Poi } from '@/shared/types/poi.ts'
 import { MapControls } from '@/features/swipe/components/MapControls'
 import { createMinimalistMarker } from '@/features/swipe/components/MapMarker'
 import { MapDrawer } from '@/features/map/components/MapDrawer.tsx'
@@ -9,10 +12,7 @@ import { MapPopover } from '@/features/map/components/MapPopover'
 import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
 import { ExpandableFloatingButton } from '@/shared/components/expandable-floating-button'
 import { $api, fetchClient } from '@/shared/api/client.ts'
-import type { Poi } from '@/shared/types/poi.ts'
-import { List } from 'lucide-react'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
-import { useQueries } from '@tanstack/react-query'
 
 type DrawerView = 'list' | 'details'
 
@@ -101,7 +101,7 @@ function RouteComponent() {
   const allPoiWithType = useMemo(() => {
     if (!poi) return []
     const userPoiUuids = new Set(
-      (userPoi as Poi[] | undefined)?.map((p: Poi) => p.uuid) || []
+      (userPoi as Array<Poi> | undefined)?.map((p: Poi) => p.uuid) || []
     )
     return poi.map((p) => ({
       ...p,
@@ -111,7 +111,7 @@ function RouteComponent() {
 
   // For listing: combine without duplicates, user POIs first, then regular POIs
   const placesForListing = useMemo(() => {
-    const userPoiArray = (userPoi as Poi[] | undefined) || []
+    const userPoiArray = (userPoi as Array<Poi> | undefined) || []
     const poiArray = poi || []
     const userPoiUuids = new Set(userPoiArray.map((p: Poi) => p.uuid))
     const userPoiList = userPoiArray.map((p: Poi) => ({
@@ -134,8 +134,8 @@ function RouteComponent() {
           poiId: place.uuid,
           name: place.name,
           image: place.imageUrl,
-          description: place.shortDescription || place.longDescription || '',
-          tags: [] as string[],
+          description: place.longDescription || place.shortDescription || '',
+          tags: [] as Array<string>,
           location:
             place.locationX && place.locationY
               ? `${place.locationX}, ${place.locationY}`
@@ -183,7 +183,7 @@ function RouteComponent() {
     name: string
     image: string
     description: string
-    tags: string[]
+    tags: Array<string>
     location: string
     distance: string
   }) => {

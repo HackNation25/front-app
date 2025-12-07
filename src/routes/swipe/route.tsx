@@ -147,7 +147,7 @@ function RouteComponent() {
         poiId: poi.uuid,
         name: poi.name,
         image: poi.imageUrl,
-        description: poi.shortDescription || poi.longDescription || '',
+        description: poi.longDescription || poi.shortDescription || '',
         tags: [] as Array<string>, // Tags not available in API response
         location:
           poi.locationX && poi.locationY

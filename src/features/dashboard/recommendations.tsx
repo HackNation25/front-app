@@ -1,13 +1,13 @@
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
+import type { Place } from '@/shared/types/place'
 import { useSlider } from '@/shared/hooks/use-slider'
 import { useElementSize } from '@/shared/hooks/use-element-size'
 import { RecommendationCard } from '@/shared/components/recommendation-card'
-import type { Place } from '@/shared/types/place'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 import { $api } from '@/shared/api/client'
-import { useNavigate } from '@tanstack/react-router'
 
 export function Recommendations() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -36,7 +36,7 @@ export function Recommendations() {
   )
 
   // Map API response to Place format
-  const places: Place[] =
+  const places: Array<Place> =
     recommendations?.map((poi) => ({
       id: poi.uuid,
       name: poi.name,
