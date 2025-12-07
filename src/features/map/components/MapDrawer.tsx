@@ -1,10 +1,23 @@
 import { motion } from 'framer-motion'
 import { MapPin, Navigation } from 'lucide-react'
+import { AttractionsList } from './AttractionsList'
+
+type DrawerView = 'list' | 'details'
 
 interface MapDrawerProps {
   isOpen: boolean
   onClose: () => void
   onOpen: () => void
+  view: DrawerView
+  onViewChange: (view: DrawerView) => void
+  places: Array<{
+    name: string
+    image: string
+    description: string
+    tags: string[]
+    location: string
+    distance: string
+  }>
   place: {
     name: string
     image: string
@@ -13,12 +26,30 @@ interface MapDrawerProps {
     location: string
     distance: string
   } | null
+  onPlaceSelect: (place: {
+    name: string
+    image: string
+    description: string
+    tags: string[]
+    location: string
+    distance: string
+  }) => void
 }
 
-export function MapDrawer({ isOpen, onClose, onOpen, place }: MapDrawerProps) {
+export function MapDrawer({
+  isOpen,
+  onClose,
+  onOpen,
+  view,
+  onViewChange,
+  places,
+  place,
+  onPlaceSelect,
+}: MapDrawerProps) {
   const handleDragEnd = (_: unknown, info: { offset: { y: number } }) => {
     if (info.offset.y > 150) {
       onClose()
+      onViewChange('list')
     } else if (info.offset.y < -150) {
       onOpen()
     }
@@ -57,7 +88,9 @@ export function MapDrawer({ isOpen, onClose, onOpen, place }: MapDrawerProps) {
 
         {/* Scrollable content */}
         <div className="overflow-y-auto">
-          {place ? (
+          {view === 'list' ? (
+            <AttractionsList places={places} onPlaceSelect={onPlaceSelect} />
+          ) : place ? (
             <>
               {/* Hero image */}
               <img
@@ -109,7 +142,7 @@ export function MapDrawer({ isOpen, onClose, onOpen, place }: MapDrawerProps) {
               </div>
             </>
           ) : (
-            <div className="p-6 text-gray-500">null</div>
+            <div className="p-6 text-gray-500">Select an attraction</div>
           )}
         </div>
       </motion.div>
