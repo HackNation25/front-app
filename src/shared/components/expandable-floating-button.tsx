@@ -9,9 +9,9 @@ interface ExpandableFloatingButtonProps {
    */
   isVisible: boolean
   /**
-   * Position of the button - 'left' or 'right'
+   * Position of the button - 'left', 'right', 'bottom', or 'bottom-right'
    */
-  position: 'left' | 'right'
+  position: 'left' | 'right' | 'bottom' | 'bottom-right'
   /**
    * Text to display when expanded
    */
@@ -21,9 +21,13 @@ interface ExpandableFloatingButtonProps {
    */
   icon: ReactNode
   /**
-   * Route to navigate to when clicked
+   * Route to navigate to when clicked (optional if onClick is provided)
    */
-  to: string
+  to?: string
+  /**
+   * Optional onClick handler (takes precedence over to)
+   */
+  onClick?: () => void
   /**
    * Optional aria-label for accessibility
    */
@@ -34,11 +38,23 @@ interface ExpandableFloatingButtonProps {
   className?: string
 }
 
-const createContainerVariants = (position: 'left' | 'right') => ({
+const createContainerVariants = (
+  position: 'left' | 'right' | 'bottom' | 'bottom-right'
+) => ({
   hidden: {
     opacity: 0,
-    x: position === 'left' ? -20 : 20,
-    y: position === 'right' ? -20 : 0,
+    x:
+      position === 'left'
+        ? -20
+        : position === 'right' || position === 'bottom-right'
+          ? 20
+          : 0,
+    y:
+      position === 'bottom' || position === 'bottom-right'
+        ? 20
+        : position === 'right'
+          ? -20
+          : 0,
     scale: 0.9,
   },
   visible: {
@@ -49,8 +65,18 @@ const createContainerVariants = (position: 'left' | 'right') => ({
   },
   exit: {
     opacity: 0,
-    x: position === 'left' ? -20 : 20,
-    y: position === 'right' ? -20 : 0,
+    x:
+      position === 'left'
+        ? -20
+        : position === 'right' || position === 'bottom-right'
+          ? 20
+          : 0,
+    y:
+      position === 'bottom' || position === 'bottom-right'
+        ? 20
+        : position === 'right'
+          ? -20
+          : 0,
     scale: 0.9,
   },
 })
@@ -127,6 +153,7 @@ export function ExpandableFloatingButton({
   text,
   icon,
   to,
+  onClick,
   'aria-label': ariaLabel,
   className = '',
 }: ExpandableFloatingButtonProps) {
@@ -135,6 +162,18 @@ export function ExpandableFloatingButton({
   const [isFocused, setIsFocused] = useState(false)
   const [offset, setOffset] = useState(() => {
     const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0
+    if (position === 'bottom') {
+      // Center for bottom position
+      return '50%'
+    }
+    if (position === 'bottom-right') {
+      // Right side for bottom-right position
+      if (viewportWidth >= 500) {
+        const offset = (viewportWidth - 500) / 2 + 16
+        return `${offset}px`
+      }
+      return '1rem'
+    }
     if (viewportWidth >= 500) {
       const offset = (viewportWidth - 500) / 2 + 16
       return `${offset}px`
@@ -151,6 +190,19 @@ export function ExpandableFloatingButton({
   useEffect(() => {
     const updateOffset = () => {
       const viewportWidth = window.innerWidth
+      if (position === 'bottom') {
+        setOffset('50%')
+        return
+      }
+      if (position === 'bottom-right') {
+        if (viewportWidth >= 500) {
+          const offset = (viewportWidth - 500) / 2 + 16
+          setOffset(`${offset}px`)
+        } else {
+          setOffset('1rem')
+        }
+        return
+      }
       if (viewportWidth >= 500) {
         const offset = (viewportWidth - 500) / 2 + 16
         setOffset(`${offset}px`)
@@ -162,10 +214,14 @@ export function ExpandableFloatingButton({
     updateOffset()
     window.addEventListener('resize', updateOffset)
     return () => window.removeEventListener('resize', updateOffset)
-  }, [])
+  }, [position])
 
   const handleClick = () => {
-    navigate({ to })
+    if (onClick) {
+      onClick()
+    } else if (to) {
+      navigate({ to })
+    }
   }
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -195,16 +251,27 @@ export function ExpandableFloatingButton({
       {isVisible && (
         <motion.div
           key={`expandable-button-${isVisible}`}
-          className={`fixed top-4 z-50 ${className}`}
+          className={`fixed ${
+            position === 'bottom' || position === 'bottom-right'
+              ? 'bottom-20'
+              : 'top-4'
+          } z-50 ${className}`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           transition={containerTransition}
           style={{
-            transform: 'translateZ(0)',
+            transform:
+              position === 'bottom'
+                ? 'translateX(-50%) translateZ(0)'
+                : 'translateZ(0)',
             willChange: 'transform, opacity',
-            [position]: offset,
+            ...(position === 'bottom'
+              ? { left: '50%' }
+              : position === 'bottom-right'
+                ? { right: offset }
+                : { [position]: offset }),
           }}
           onAnimationComplete={() => {
             // Gdy animacja wejścia się zakończy, uruchom timer na ukrycie tekstu

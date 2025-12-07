@@ -10,8 +10,8 @@ import type { Query } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/')({
   beforeLoad: ({ context }) => {
-    // Invalidate recommendations query when entering / route
-    context.queryClient.invalidateQueries({
+    // Refetch recommendations query without cache when entering / route
+    context.queryClient.refetchQueries({
       predicate: (query: Query) => {
         const queryKey = query.queryKey
         return (
@@ -97,9 +97,9 @@ const bydgoszczWebsites: RouteItem[] = [
 function App() {
   const queryClient = useQueryClient()
 
-  // Invalidate recommendations query on mount
+  // Refetch recommendations query on mount without cache
   useEffect(() => {
-    queryClient.invalidateQueries({
+    queryClient.refetchQueries({
       predicate: (query: Query) => {
         const queryKey = query.queryKey
         return (
@@ -113,7 +113,7 @@ function App() {
   }, [queryClient])
 
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-full overflow-x-hidden lg:max-w-[500px] xl:max-w-[500px]">
       <HeroHeader />
       <Recommendations />
       <MapJumbotron />

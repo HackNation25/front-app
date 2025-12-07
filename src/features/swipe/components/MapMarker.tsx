@@ -1,8 +1,28 @@
 import L from 'leaflet'
 
-export const createMinimalistMarker = (isSelected = false) => {
-  const size = isSelected ? 16 : 12
-  const color = isSelected ? '#3B82F6' : '#6B7280' // blue-500 : gray-500
+type MarkerType = 'default' | 'user' | 'selected'
+
+export const createMinimalistMarker = (
+  type: MarkerType | boolean = 'default'
+) => {
+  // Handle legacy boolean parameter
+  const markerType: MarkerType =
+    typeof type === 'boolean' ? (type ? 'selected' : 'default') : type
+
+  const size = markerType === 'selected' ? 16 : 12
+  let color: string
+
+  switch (markerType) {
+    case 'user':
+      color = '#f44336' // accent-500 (red) from styles.css
+      break
+    case 'selected':
+      color = '#3B82F6' // blue-500
+      break
+    default:
+      color = '#6B7280' // gray-500
+      break
+  }
 
   const svgIcon = `
     <svg width="${size * 2}" height="${size * 2}" viewBox="0 0 ${size * 2} ${size * 2}" xmlns="http://www.w3.org/2000/svg">

@@ -126,7 +126,10 @@ export function FloatingCardsSlider({
   const headingId = `floating-cards-heading-${title.toLowerCase().replace(/\s+/g, '-')}`
 
   return (
-    <section className="w-full py-6 px-4" aria-labelledby={headingId}>
+    <section
+      className="w-full max-w-full py-6 px-4 lg:max-w-[500px] xl:max-w-[500px]"
+      aria-labelledby={headingId}
+    >
       <Card>
         <h2
           id={headingId}
@@ -134,10 +137,10 @@ export function FloatingCardsSlider({
         >
           {title}
         </h2>
-        <div className="w-full">
+        <div className="w-full max-w-full lg:max-w-[500px] xl:max-w-[500px]">
           <div
             ref={containerRef}
-            className="relative overflow-x-hidden overflow-y-visible w-full py-8"
+            className="relative overflow-x-hidden overflow-y-visible w-full max-w-full lg:max-w-[500px] xl:max-w-[500px] py-8"
             role="region"
             aria-label={ariaLabel}
             aria-live="polite"
@@ -145,7 +148,7 @@ export function FloatingCardsSlider({
           >
             {isReady ? (
               <motion.div
-                className="flex"
+                className="flex max-w-full"
                 style={{ gap: `${gapPx}px` }}
                 animate={{ x }}
                 drag="x"

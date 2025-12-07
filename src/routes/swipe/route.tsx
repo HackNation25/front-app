@@ -12,8 +12,8 @@ import type { Query } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/swipe')({
   beforeLoad: ({ context }) => {
-    // Invalidate recommendations query when entering /swipe route
-    context.queryClient.invalidateQueries({
+    // Refetch recommendations query without cache when entering /swipe route
+    context.queryClient.refetchQueries({
       predicate: (query: Query) => {
         const queryKey = query.queryKey
         return (
@@ -48,10 +48,12 @@ function RouteComponent() {
   )
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
+  const [isRetrying, setIsRetrying] = useState(false)
 
-  // Invalidate recommendations query on mount
+  // Refetch recommendations query on mount without cache
   useEffect(() => {
-    queryClient.invalidateQueries({
+    queryClient.refetchQueries({
       predicate: (query: Query) => {
         const queryKey = query.queryKey
         return (
@@ -64,8 +66,13 @@ function RouteComponent() {
     })
   }, [queryClient])
 
-  // Fetch recommendations from API
-  const { data: recommendations, isLoading } = $api.useQuery(
+  // Fetch recommendations from API - no cache, always refetch
+  const {
+    data: recommendations,
+    isLoading,
+    isFetching,
+    refetch: refetchRecommendations,
+  } = $api.useQuery(
     'get',
     '/recommendation',
     {
@@ -78,8 +85,57 @@ function RouteComponent() {
     },
     {
       enabled: !!userId,
+      staleTime: 0, // Always consider data stale
+      gcTime: 0, // Don't cache data
+      refetchOnMount: true, // Always refetch on mount
     }
   )
+
+  // Retry up to 2 times if recommendations is empty array
+  useEffect(() => {
+    if (
+      !isLoading &&
+      !isFetching &&
+      recommendations &&
+      Array.isArray(recommendations) &&
+      recommendations.length === 0 &&
+      retryCount < 2
+    ) {
+      setIsRetrying(true)
+      const timer = setTimeout(
+        () => {
+          setRetryCount((prev) => prev + 1)
+          refetchRecommendations()
+        },
+        1000 * (retryCount + 1)
+      ) // Exponential backoff: 1s, 2s
+
+      return () => {
+        clearTimeout(timer)
+        setIsRetrying(false)
+      }
+    } else {
+      setIsRetrying(false)
+    }
+  }, [
+    recommendations,
+    isLoading,
+    isFetching,
+    retryCount,
+    refetchRecommendations,
+  ])
+
+  // Reset retry count when recommendations has data
+  useEffect(() => {
+    if (
+      recommendations &&
+      Array.isArray(recommendations) &&
+      recommendations.length > 0
+    ) {
+      setRetryCount(0)
+      setIsRetrying(false)
+    }
+  }, [recommendations])
 
   // Mutation for creating POI decision
   const createDecisionMutation = $api.useMutation('post', '/poi-decision')
@@ -107,16 +163,21 @@ function RouteComponent() {
 
   // Automatyczne przekierowanie na /map gdy skończą się karty
   useEffect(() => {
-    if (!isLoading && cardsData.length > 0 && !hasMoreCards) {
+    if (!isLoading && !isFetching && cardsData.length > 0 && !hasMoreCards) {
       toast.success('Zostałeś przekierowany na mapę, aby odkrywać okolicę!', {
         duration: 2000,
       })
       // Use setTimeout to ensure toast is visible before navigation
       setTimeout(() => {
-        navigate({ to: '/map' })
+        navigate({
+          to: '/map',
+          search: {
+            poiId: undefined,
+          },
+        })
       }, 500)
     }
-  }, [hasMoreCards, isLoading, cardsData.length, navigate])
+  }, [hasMoreCards, isLoading, isFetching, cardsData.length, navigate])
 
   const handleSwipe = (decision: boolean) => {
     if (!currentCard || !userId || isProcessing) return
@@ -181,7 +242,7 @@ function RouteComponent() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || isFetching || isRetrying) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-foreground-200 border-t-primary-600" />
@@ -262,6 +323,14 @@ function RouteComponent() {
             isOpen={isDrawerOpen}
             onClose={() => setIsDrawerOpen(false)}
             place={currentCard}
+            onShowOnMap={(poiId) => {
+              navigate({
+                to: '/map',
+                search: {
+                  poiId,
+                },
+              })
+            }}
           />
         )}
       </div>

@@ -9,7 +9,7 @@ export function AppHeader({ enabled, children }: AppHeaderProps) {
   if (!enabled) return <>{children}</>
 
   return (
-    <div className="flex min-h-screen flex-col pb-20 lg:flex-row lg:pb-0 lg:pl-20">
+    <div className="flex min-h-screen flex-col pb-20 lg:flex-row">
       {/* Logo centered at top */}
       <img
         src="/logo.png"
