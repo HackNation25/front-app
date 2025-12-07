@@ -31,14 +31,15 @@ function RouteComponent() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  // Fetch POI decisions from API
-  const { data: poiDecisions, isLoading } = $api.useQuery(
+  // Fetch recommendations from API
+  const { data: recommendations, isLoading } = $api.useQuery(
     'get',
-    '/poi-decision/user/{userProfileId}',
+    '/recommendation',
     {
       params: {
-        path: {
-          userProfileId: userId || '',
+        query: {
+          userId: userId || '',
+          limit: 50, // Fetch up to 50 recommendations
         },
       },
     },
@@ -52,30 +53,21 @@ function RouteComponent() {
 
   // Map API response to card data format
   const cardsData: CardData[] =
-    poiDecisions
-      ?.map((decision) => {
-        const poi = decision.poi
-        if (!poi) {
-          return null
-        }
-        const card: CardData = {
-          poiId: decision.poiId,
-          name: poi.name,
-          image: poi.imageUrl,
-          description: poi.shortDescription || poi.longDescription || '',
-          tags: [] as string[], // Tags not available in API response
-          location:
-            poi.locationX && poi.locationY
-              ? `${poi.locationX}, ${poi.locationY}`
-              : '',
-          distance:
-            decision.distanceMeters != null
-              ? `${(decision.distanceMeters / 1000).toFixed(1)} km`
-              : '',
-        }
-        return card
-      })
-      .filter((card): card is CardData => card !== null) || []
+    recommendations?.map((poi) => {
+      const card: CardData = {
+        poiId: poi.uuid,
+        name: poi.name,
+        image: poi.imageUrl,
+        description: poi.shortDescription || poi.longDescription || '',
+        tags: [] as string[], // Tags not available in API response
+        location:
+          poi.locationX && poi.locationY
+            ? `${poi.locationX}, ${poi.locationY}`
+            : '',
+        distance: '', // Distance not available in recommendations response
+      }
+      return card
+    }) || []
 
   const currentCard = cardsData[currentIndex]
   const hasMoreCards = currentIndex < cardsData.length
