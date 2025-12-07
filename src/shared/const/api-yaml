@@ -164,6 +164,21 @@ paths:
       tags:
         - category
   /category:
+    get:
+      operationId: CategoryController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: List of all categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryEntity'
+      summary: Get all categories
+      tags:
+        - category
     post:
       operationId: CategoryController_create
       parameters: []

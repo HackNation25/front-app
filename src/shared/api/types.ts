@@ -99,7 +99,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get all categories */
+        get: operations["CategoryController_findAll"];
         put?: never;
         /** Create a new category */
         post: operations["CategoryController_create"];
@@ -582,6 +583,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategoryEntity"];
+                };
+            };
+        };
+    };
+    CategoryController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of all categories */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryEntity"][];
                 };
             };
         };

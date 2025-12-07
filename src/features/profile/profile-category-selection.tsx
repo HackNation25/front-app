@@ -5,7 +5,7 @@ import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { CheckboxCardList } from '@/shared/components/checkbox-card-list'
 import { Card } from '@/shared/components/card'
-import { BYDGOSZCZ_CATEGORIES } from './mock-categories'
+import type { CheckboxCardItem } from '@/shared/types/checkbox-card'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { $api } from '@/shared/api/client'
@@ -21,8 +21,23 @@ export function ProfileCategorySelection() {
   const { userId, selectedCategories, setSelectedCategories, setUserId } =
     useUserSessionContext()
 
+  // Fetch categories from API
+  const { data: categories, isLoading: isLoadingCategories } = $api.useQuery(
+    'get',
+    '/category',
+    {}
+  )
+
   // Mutation for creating user profile
   const createUserProfileMutation = $api.useMutation('post', '/user/profile')
+
+  // Map API response to CheckboxCardItem format
+  const categoriesData: CheckboxCardItem[] =
+    categories?.map((category: any) => ({
+      id: category.id || category.uuid || '',
+      label: category.name || '',
+      image: category.image_url || category.imageUrl || '',
+    })) || []
 
   const form = useForm({
     defaultValues: {
@@ -36,21 +51,10 @@ export function ProfileCategorySelection() {
       // Save categories to context (which will also save to localStorage)
       setSelectedCategories(categoriesSet)
 
-      // Hardcoded categories with UUIDs
-      const hardcodedCategories = [
-        '12027b79-b00f-4fe5-aae5-5a23120e29ac', // Sports
-        '13db6913-78ac-4049-b93a-018861c26de3', // Poznaj Stare Miasto
-        '3cb773f9-d99a-4b43-b91e-bfdd000ee6a1', // Dookoła Śródmieścia
-        '66f265aa-674e-4603-bf0f-5e96bd4f41d4', // Bydgoskie Murale
-        '7987b9c5-7416-432d-ad61-71ebf143725f', // Muzea
-        '9217b26f-37e1-4507-a959-00a59fa4616c', // Bydgoszcz jako "Klein Berlin"
-        'e0aa2e05-157a-4535-a345-137147c7823a', // Bydgoszcz Turystycznie
-      ]
-
-      // Map hardcoded categories to choices format
-      const choices = hardcodedCategories.map((categoryId) => ({
+      // Map selected categories from API to choices format
+      const choices = value.categories.map((categoryId, index) => ({
         category_id: categoryId,
-        choice: '1',
+        choice: String(1 + index),
       }))
 
       const requestBody = {
@@ -143,32 +147,40 @@ export function ProfileCategorySelection() {
 
                 return (
                   <>
-                    <CheckboxCardList
-                      items={BYDGOSZCZ_CATEGORIES}
-                      selectedIds={selectedIdsSet}
-                      onSelectionChange={handleSelectionChange}
-                      ariaLabel="Lista kategorii miejsc w Bydgoszczy"
-                    />
-                    {hasErrors && (
-                      <div
-                        className="mt-4 text-sm text-red-500"
-                        role="alert"
-                        aria-live="polite"
-                      >
-                        {typeof field.state.meta.errors[0] === 'string'
-                          ? field.state.meta.errors[0]
-                          : 'Musisz wybrać przynajmniej 3 kategorie'}
+                    {isLoadingCategories ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-foreground-200 border-t-primary-600" />
                       </div>
-                    )}
-                    {selectedIdsSet.size > 0 && (
-                      <div
-                        className="mt-4 text-sm text-foreground-600"
-                        role="status"
-                        aria-live="polite"
-                      >
-                        Wybrano {selectedIdsSet.size} z{' '}
-                        {BYDGOSZCZ_CATEGORIES.length} kategorii
-                      </div>
+                    ) : (
+                      <>
+                        <CheckboxCardList
+                          items={categoriesData}
+                          selectedIds={selectedIdsSet}
+                          onSelectionChange={handleSelectionChange}
+                          ariaLabel="Lista kategorii miejsc w Bydgoszczy"
+                        />
+                        {hasErrors && (
+                          <div
+                            className="mt-4 text-sm text-red-500"
+                            role="alert"
+                            aria-live="polite"
+                          >
+                            {typeof field.state.meta.errors[0] === 'string'
+                              ? field.state.meta.errors[0]
+                              : 'Musisz wybrać przynajmniej 3 kategorie'}
+                          </div>
+                        )}
+                        {selectedIdsSet.size > 0 && (
+                          <div
+                            className="mt-4 text-sm text-foreground-600"
+                            role="status"
+                            aria-live="polite"
+                          >
+                            Wybrano {selectedIdsSet.size} z{' '}
+                            {categoriesData.length} kategorii
+                          </div>
+                        )}
+                      </>
                     )}
                     <div className="mt-6 flex justify-end">
                       <button
