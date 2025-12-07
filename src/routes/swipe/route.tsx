@@ -2,47 +2,163 @@ import { createFileRoute } from '@tanstack/react-router'
 import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
 import { ActionButtons } from '@/features/swipe/components/ActionButtons'
 import { PlaceDrawer } from '@/features/swipe/components/PlaceDrawer'
-import { PLACES_DATA } from '@/features/swipe/data.ts'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useUserSessionContext } from '@/shared/contexts/user-session-context'
+import { $api } from '@/shared/api/client'
+import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/swipe')({
   component: RouteComponent,
 })
 
+type CardData = {
+  poiId: string
+  name: string
+  image: string
+  description: string
+  tags: string[]
+  location: string
+  distance: string
+}
+
 function RouteComponent() {
+  const { incrementSwipeCount, userId } = useUserSessionContext()
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [_likedPlaces, setLikedPlaces] = useState<typeof PLACES_DATA>([])
-  const [_dislikedPlaces, setDislikedPlaces] = useState<typeof PLACES_DATA>([])
   const [triggerSwipe, setTriggerSwipe] = useState<'left' | 'right' | null>(
     null
   )
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
-  const currentCard = PLACES_DATA[currentIndex]
-  const hasMoreCards = currentIndex < PLACES_DATA.length
+  // Fetch POI decisions from API
+  const { data: poiDecisions, isLoading } = $api.useQuery(
+    'get',
+    '/poi-decision/user/{userProfileId}',
+    {
+      params: {
+        path: {
+          userProfileId: userId || '',
+        },
+      },
+    },
+    {
+      enabled: !!userId,
+    }
+  )
+
+  // Mutation for creating POI decision
+  const createDecisionMutation = $api.useMutation('post', '/poi-decision')
+
+  // Map API response to card data format
+  const cardsData: CardData[] =
+    poiDecisions
+      ?.map((decision) => {
+        const poi = decision.poi
+        if (!poi) {
+          return null
+        }
+        const card: CardData = {
+          poiId: decision.poiId,
+          name: poi.name,
+          image: poi.imageUrl,
+          description: poi.shortDescription || poi.longDescription || '',
+          tags: [] as string[], // Tags not available in API response
+          location:
+            poi.locationX && poi.locationY
+              ? `${poi.locationX}, ${poi.locationY}`
+              : '',
+          distance:
+            decision.distanceMeters != null
+              ? `${(decision.distanceMeters / 1000).toFixed(1)} km`
+              : '',
+        }
+        return card
+      })
+      .filter((card): card is CardData => card !== null) || []
+
+  const currentCard = cardsData[currentIndex]
+  const hasMoreCards = currentIndex < cardsData.length
+
+  const handleSwipe = (decision: boolean) => {
+    if (!currentCard || !userId || isProcessing) return
+
+    setIsProcessing(true)
+
+    // Create POI decision via API
+    createDecisionMutation.mutate(
+      {
+        body: {
+          poiId: currentCard.poiId,
+          userProfileId: userId,
+          decision,
+        },
+      },
+      {
+        onSuccess: () => {
+          // Only increment swipe count and remove card on success
+          incrementSwipeCount()
+          setCurrentIndex((prev) => prev + 1)
+          setTriggerSwipe(null)
+          setIsProcessing(false)
+        },
+        onError: (error) => {
+          console.error('Error creating POI decision:', error)
+          toast.error('Błąd podczas zapisywania decyzji. Spróbuj ponownie.')
+          // Reset trigger swipe to prevent card removal
+          setTriggerSwipe(null)
+          setIsProcessing(false)
+          // Don't remove card on error
+        },
+      }
+    )
+  }
 
   const handleSwipeLeft = () => {
-    if (!currentCard) return
-    setDislikedPlaces((prev) => [...prev, currentCard])
+    handleSwipe(false)
   }
 
   const handleSwipeRight = () => {
-    if (!currentCard) return
-    setLikedPlaces((prev) => [...prev, currentCard])
+    handleSwipe(true)
   }
 
   const handleSwipeComplete = () => {
-    setCurrentIndex((prev) => prev + 1)
-    setTriggerSwipe(null)
+    // Called after animation completes
+    // Card removal already happened in onSuccess
   }
 
   const onDislike = () => {
-    setTriggerSwipe('left')
+    if (!isProcessing && currentCard) {
+      // Trigger swipe animation first, then API call
+      setTriggerSwipe('left')
+      handleSwipe(false)
+    }
   }
 
   const onLike = () => {
-    setTriggerSwipe('right')
+    if (!isProcessing && currentCard) {
+      // Trigger swipe animation first, then API call
+      setTriggerSwipe('right')
+      handleSwipe(true)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-foreground-200 border-t-primary-600" />
+      </div>
+    )
+  }
+
+  if (!userId) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-foreground-400">
+          Musisz być zalogowany aby używać tej funkcji.
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -57,12 +173,12 @@ function RouteComponent() {
             <>
               {[0, 1].map((offset) => {
                 const index = currentIndex + offset
-                const card = PLACES_DATA[index]
+                const card = cardsData[index]
                 if (!card) return null
 
                 return (
                   <motion.div
-                    key={index}
+                    key={card.poiId}
                     className="absolute inset-0 will-change-transform"
                     style={{
                       zIndex: 20 - offset * 10,
@@ -74,9 +190,15 @@ function RouteComponent() {
                     transition={{ duration: 0.4, ease: 'easeOut' }}
                   >
                     <SwipeableCard
-                      {...card}
+                      name={card.name}
+                      image={card.image}
+                      description={card.description}
+                      tags={card.tags}
+                      location={card.location}
+                      distance={card.distance}
                       stackPosition={offset}
                       isDraggable={offset === 0}
+                      disabled={isProcessing}
                       onSwipeLeft={handleSwipeLeft}
                       onSwipeRight={handleSwipeRight}
                       onSwipeComplete={handleSwipeComplete}
@@ -97,11 +219,13 @@ function RouteComponent() {
           />
         )}
 
-        <PlaceDrawer
-          isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-          place={currentCard}
-        />
+        {currentCard && (
+          <PlaceDrawer
+            isOpen={isDrawerOpen}
+            onClose={() => setIsDrawerOpen(false)}
+            place={currentCard}
+          />
+        )}
       </div>
     </div>
   )

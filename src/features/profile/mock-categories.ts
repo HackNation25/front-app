@@ -43,3 +43,6 @@ export const BYDGOSZCZ_CATEGORIES: CheckboxCardItem[] = [
   },
 ]
 
+
+
+
