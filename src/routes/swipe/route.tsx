@@ -1,14 +1,30 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
 import { ActionButtons } from '@/features/swipe/components/ActionButtons'
 import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 import { $api } from '@/shared/api/client'
 import toast from 'react-hot-toast'
+import { useQueryClient } from '@tanstack/react-query'
+import type { Query } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/swipe')({
+  beforeLoad: ({ context }) => {
+    // Invalidate recommendations query when entering /swipe route
+    context.queryClient.invalidateQueries({
+      predicate: (query: Query) => {
+        const queryKey = query.queryKey
+        return (
+          Array.isArray(queryKey) &&
+          queryKey.length >= 2 &&
+          queryKey[0] === 'get' &&
+          queryKey[1] === '/recommendation'
+        )
+      },
+    })
+  },
   component: RouteComponent,
 })
 
@@ -23,6 +39,8 @@ type CardData = {
 }
 
 function RouteComponent() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { incrementSwipeCount, userId } = useUserSessionContext()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [triggerSwipe, setTriggerSwipe] = useState<'left' | 'right' | null>(
@@ -30,6 +48,21 @@ function RouteComponent() {
   )
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+
+  // Invalidate recommendations query on mount
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      predicate: (query: Query) => {
+        const queryKey = query.queryKey
+        return (
+          Array.isArray(queryKey) &&
+          queryKey.length >= 2 &&
+          queryKey[0] === 'get' &&
+          queryKey[1] === '/recommendation'
+        )
+      },
+    })
+  }, [queryClient])
 
   // Fetch recommendations from API
   const { data: recommendations, isLoading } = $api.useQuery(
@@ -71,6 +104,19 @@ function RouteComponent() {
 
   const currentCard = cardsData[currentIndex]
   const hasMoreCards = currentIndex < cardsData.length
+
+  // Automatyczne przekierowanie na /map gdy skończą się karty
+  useEffect(() => {
+    if (!isLoading && cardsData.length > 0 && !hasMoreCards) {
+      toast.success('Zostałeś przekierowany na mapę, aby odkrywać okolicę!', {
+        duration: 2000,
+      })
+      // Use setTimeout to ensure toast is visible before navigation
+      setTimeout(() => {
+        navigate({ to: '/map' })
+      }, 500)
+    }
+  }, [hasMoreCards, isLoading, cardsData.length, navigate])
 
   const handleSwipe = (decision: boolean) => {
     if (!currentCard || !userId || isProcessing) return
