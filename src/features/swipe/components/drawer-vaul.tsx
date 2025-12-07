@@ -1,5 +1,5 @@
 import { Drawer } from 'vaul'
-import { MapPin, Navigation, X, List, Route as RouteIcon } from 'lucide-react'
+import { List, MapPin, Navigation, Route as RouteIcon, X } from 'lucide-react'
 import type { Poi } from '@/shared/types/poi.ts'
 import { openGoogleMapsRoute } from '@/shared/utils/google-maps-route'
 
@@ -8,7 +8,7 @@ type CardData = {
   name: string
   image: string
   description: string
-  tags: string[]
+  tags: Array<string>
   location: string
   distance: string
   isUserPoi?: boolean
@@ -18,11 +18,11 @@ interface PlaceDrawerProps {
   isOpen: boolean
   onClose: () => void
   place: CardData | null
-  places?: CardData[] | null
+  places?: Array<CardData> | null
   onPlaceSelect?: (place: CardData) => void
   onShowAll?: () => void
   onShowOnMap?: (poiId: string) => void
-  userPoi?: Poi[] | null
+  userPoi?: Array<Poi> | null
 }
 
 export function PlaceDrawer({
@@ -95,8 +95,8 @@ export function PlaceDrawer({
                       style={
                         placeItem.isUserPoi
                           ? {
-                              borderColor: '#f44336', // accent-500 (red) - same as marker
-                              backgroundColor: '#ffebee', // accent-50 - very light red, almost white
+                              borderColor: '#32d58363', // accent-500 (red) - same as marker
+                              backgroundColor: '#32d5831a', // accent-50 - very light red, almost white
                             }
                           : undefined
                       }

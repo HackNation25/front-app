@@ -1,14 +1,14 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
-import { ActionButtons } from '@/features/swipe/components/ActionButtons'
-import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useUserSessionContext } from '@/shared/contexts/user-session-context'
-import { $api } from '@/shared/api/client'
 import toast from 'react-hot-toast'
 import { useQueryClient } from '@tanstack/react-query'
 import type { Query } from '@tanstack/react-query'
+import { SwipeableCard } from '@/features/swipe/components/SwipeableCard'
+import { ActionButtons } from '@/features/swipe/components/ActionButtons'
+import { PlaceDrawer } from '@/features/swipe/components/drawer-vaul'
+import { useUserSessionContext } from '@/shared/contexts/user-session-context'
+import { $api } from '@/shared/api/client'
 
 export const Route = createFileRoute('/swipe')({
   beforeLoad: ({ context }) => {
@@ -33,7 +33,7 @@ type CardData = {
   name: string
   image: string
   description: string
-  tags: string[]
+  tags: Array<string>
   location: string
   distance: string
 }
@@ -141,14 +141,14 @@ function RouteComponent() {
   const createDecisionMutation = $api.useMutation('post', '/poi-decision')
 
   // Map API response to card data format
-  const cardsData: CardData[] =
+  const cardsData: Array<CardData> =
     recommendations?.map((poi) => {
       const card: CardData = {
         poiId: poi.uuid,
         name: poi.name,
         image: poi.imageUrl,
         description: poi.shortDescription || poi.longDescription || '',
-        tags: [] as string[], // Tags not available in API response
+        tags: [] as Array<string>, // Tags not available in API response
         location:
           poi.locationX && poi.locationY
             ? `${poi.locationX}, ${poi.locationY}`
@@ -266,7 +266,7 @@ function RouteComponent() {
         <div className="relative w-full max-w-md h-[600px]">
           {!hasMoreCards ? (
             <div className="flex items-center justify-center h-full text-2xl font-bold text-gray-600">
-              No more places! 🎉
+              Brak pozostałych miejsc do odwiedzenia! 🎉
             </div>
           ) : (
             <>

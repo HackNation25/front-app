@@ -1,7 +1,7 @@
 import type { Poi } from '@/shared/types/poi.ts'
 
 interface AttractionsListProps {
-  places: (Poi & { isUserPoi?: boolean })[] | undefined
+  places: Array<Poi & { isUserPoi?: boolean }> | undefined
   onPlaceSelect: (place: Poi) => void
 }
 
