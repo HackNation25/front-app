@@ -3,9 +3,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { PLACES_DATA } from '@/features/swipe/data'
-import { PlaceDrawer } from '@/features/swipe/components/PlaceDrawer'
 import { MapControls } from '@/features/swipe/components/MapControls'
 import { createMinimalistMarker } from '@/features/swipe/components/MapMarker'
+import { MapDrawer } from '@/features/map/components/MapDrawer.tsx'
 
 export const Route = createFileRoute('/map')({
   component: RouteComponent,
@@ -58,10 +58,11 @@ function RouteComponent() {
         ))}
       </MapContainer>
 
-      <PlaceDrawer
+      <MapDrawer
         place={selectedPlace}
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+        onOpen={() => setIsDrawerOpen(true)}
       />
     </div>
   )
