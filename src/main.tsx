@@ -66,7 +66,7 @@ if (rootElement && !rootElement.innerHTML) {
       <UserSessionProvider>
         <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
           <RouterProviderWrapper />
-          <Toaster position="top-right" />
+          <Toaster position="top-center" />
         </TanStackQueryProvider.Provider>
       </UserSessionProvider>
     </StrictMode>

@@ -77,15 +77,18 @@ export function RecommendationCard({
             />
             <div>
               <h3 className="text-2xl font-bold mb-1">{place.name}</h3>
-              <p className="text-sm text-foreground-200 font-medium">{place.location}</p>
+              <p className="text-sm text-foreground-200 font-medium">
+                {place.location}
+              </p>
             </div>
           </div>
           {place.description && (
-            <p className="text-sm text-foreground-200 leading-relaxed">{place.description}</p>
+            <p className="text-sm text-foreground-200 leading-relaxed">
+              {place.description}
+            </p>
           )}
         </div>
       </div>
     </motion.article>
   )
 }
-

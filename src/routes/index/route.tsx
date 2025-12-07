@@ -4,8 +4,25 @@ import { Recommendations } from '@/features/dashboard/recommendations'
 import { MapJumbotron } from '@/features/dashboard/map-jumbotron'
 import { FloatingCardsSlider } from '@/features/dashboard/floating-cards-slider'
 import type { RouteItem } from '@/shared/types/route'
+import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import type { Query } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/')({
+  beforeLoad: ({ context }) => {
+    // Invalidate recommendations query when entering / route
+    context.queryClient.invalidateQueries({
+      predicate: (query: Query) => {
+        const queryKey = query.queryKey
+        return (
+          Array.isArray(queryKey) &&
+          queryKey.length >= 2 &&
+          queryKey[0] === 'get' &&
+          queryKey[1] === '/recommendation'
+        )
+      },
+    })
+  },
   component: App,
 })
 
@@ -78,6 +95,23 @@ const bydgoszczWebsites: RouteItem[] = [
 ]
 
 function App() {
+  const queryClient = useQueryClient()
+
+  // Invalidate recommendations query on mount
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      predicate: (query: Query) => {
+        const queryKey = query.queryKey
+        return (
+          Array.isArray(queryKey) &&
+          queryKey.length >= 2 &&
+          queryKey[0] === 'get' &&
+          queryKey[1] === '/recommendation'
+        )
+      },
+    })
+  }, [queryClient])
+
   return (
     <div className="relative">
       <HeroHeader />
