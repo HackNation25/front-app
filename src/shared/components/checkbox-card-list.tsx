@@ -4,7 +4,7 @@ import { Check } from 'lucide-react'
 import type { CheckboxCardItem } from '@/shared/types/checkbox-card'
 
 interface CheckboxCardListProps {
-  items: CheckboxCardItem[]
+  items: Array<CheckboxCardItem>
   selectedIds: Set<string>
   onSelectionChange: (selectedIds: Set<string>) => void
   ariaLabel?: string
@@ -26,7 +26,7 @@ export function CheckboxCardList({
       }
       onSelectionChange(newSelectedIds)
     },
-    [selectedIds, onSelectionChange],
+    [selectedIds, onSelectionChange]
   )
 
   const handleKeyDown = useCallback(
@@ -36,15 +36,11 @@ export function CheckboxCardList({
         handleToggle(itemId)
       }
     },
-    [handleToggle],
+    [handleToggle]
   )
 
   return (
-    <div
-      className="grid grid-cols-3 gap-2"
-      role="group"
-      aria-label={ariaLabel}
-    >
+    <div className="grid grid-cols-2 gap-4" role="group" aria-label={ariaLabel}>
       {items.map((item) => {
         const isSelected = selectedIds.has(item.id)
         const checkboxId = `checkbox-${item.id}`
@@ -138,7 +134,3 @@ export function CheckboxCardList({
     </div>
   )
 }
-
-
-
-

@@ -3,9 +3,9 @@ import { useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
+import type { CheckboxCardItem } from '@/shared/types/checkbox-card'
 import { CheckboxCardList } from '@/shared/components/checkbox-card-list'
 import { Card } from '@/shared/components/card'
-import type { CheckboxCardItem } from '@/shared/types/checkbox-card'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { $api } from '@/shared/api/client'
@@ -32,7 +32,7 @@ export function ProfileCategorySelection() {
   const createUserProfileMutation = $api.useMutation('post', '/user/profile')
 
   // Map API response to CheckboxCardItem format
-  const categoriesData: CheckboxCardItem[] =
+  const categoriesData: Array<CheckboxCardItem> =
     categories?.map((category: any) => ({
       id: category.id || category.uuid || '',
       label: category.name || '',
