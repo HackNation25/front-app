@@ -8,6 +8,7 @@ export const PLACES_DATA = [
     tags: ['Architektura', 'Kultura', 'Widok'],
     location: 'Plac Defilad 1, Śródmieście',
     distance: '2.3 km',
+    coords: { lat: 52.2297, lng: 21.0122 },
   },
   {
     name: 'Stare Miasto',
@@ -18,6 +19,7 @@ export const PLACES_DATA = [
     tags: ['Historia', 'Architektura', 'UNESCO'],
     location: 'Rynek Starego Miasta, Stare Miasto',
     distance: '3.1 km',
+    coords: { lat: 52.2482, lng: 21.0143 },
   },
   {
     name: 'Łazienki Królewskie',
@@ -28,6 +30,7 @@ export const PLACES_DATA = [
     tags: ['Park', 'Kultura', 'Natura', 'Architektura'],
     location: 'Agrykoli 1, Śródmieście',
     distance: '4.7 km',
+    coords: { lat: 52.2156, lng: 21.0354 },
   },
   {
     name: 'Pałac w Wilanowie',
@@ -38,6 +41,7 @@ export const PLACES_DATA = [
     tags: ['Historia', 'Architektura', 'Park', 'Muzeum'],
     location: 'Stanisława Kostki Potockiego 10/16, Wilanów',
     distance: '11.2 km',
+    coords: { lat: 52.1648, lng: 21.089 },
   },
   {
     name: 'Centrum Nauki Kopernik',
@@ -47,6 +51,7 @@ export const PLACES_DATA = [
     tags: ['Nauka', 'Rodzina', 'Edukacja'],
     location: 'Wybrzeże Kościuszkowskie 20, Powiśle',
     distance: '2.8 km',
+    coords: { lat: 52.2419, lng: 21.0186 },
   },
   {
     name: 'Stadion Narodowy',
@@ -56,5 +61,6 @@ export const PLACES_DATA = [
     tags: ['Sport', 'Rozrywka', 'Architektura'],
     location: 'Poniatowskiego 1, Praga-Południe',
     distance: '5.4 km',
+    coords: { lat: 52.2393, lng: 21.0458 },
   },
 ]
