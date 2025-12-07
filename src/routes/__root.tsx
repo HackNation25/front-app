@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
 import {
   createRootRouteWithContext,
   useMatchRoute,
+  useLocation,
   Outlet,
   redirect,
 } from '@tanstack/react-router'
@@ -17,7 +17,6 @@ import { BackButton } from '@/features/layout/back-button'
 import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { LayoutProvider } from '@/shared/contexts/layout-context'
 import { ProfileButtonFeature } from '@/features/layout/profile-button'
-import { ScreenSizeBlocker } from '@/shared/components/screen-size-blocker'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 import { AppHeader } from '@/features/dashboard/header.tsx'
 
@@ -87,60 +86,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootComponent() {
   const matchRoute = useMatchRoute()
-  const isSwipeRoute = !!matchRoute({
-    to: NAVIGATION_ROUTES.SWIPE,
-    fuzzy: false,
-  })
-
-  const { userId, selectedCategories, swipeCount } = useUserSessionContext()
+  const location = useLocation()
+  const { userId, swipeCount } = useUserSessionContext()
   const isMapRoute = !!matchRoute({
     to: NAVIGATION_ROUTES.MAP,
     fuzzy: false,
   })
 
-  const [screenWidth, setScreenWidth] = useState(0)
+  const isHomeRoute = location.pathname === '/'
 
   // Sprawdź czy użytkownik może używać pełnej aplikacji
   // Pokazuj navbar i umożliwiaj nawigację tylko jeśli swipeCount >= 3
   // (niezależnie od userId - nawet jeśli ma userId, ale swipeCount < 3, nie pokazuj navbar)
   const hasCompletedOnboarding = swipeCount >= 3
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setScreenWidth(window.innerWidth)
-    }
-
-    // Check on mount
-    checkScreenSize()
-
-    // Check on resize
-    window.addEventListener('resize', checkScreenSize)
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize)
-    }
-  }, [])
-
   // Show blocker instead of app if screen width is greater than 1024px
-  if (screenWidth > 1024) {
-    return (
-      <>
-        <ScreenSizeBlocker />
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
-      </>
-    )
-  }
+  // n
 
   return (
     <>
@@ -153,13 +114,9 @@ function RootComponent() {
           {/* Navbar wrapper with Activity and Framer Motion animations */}
           <NavigationBarWrapper isVisible={hasCompletedOnboarding} />
 
-          {/* Back button - appears on /swipe route if user has completed onboarding OR if has categories but no userId */}
+          {/* Back button - appears everywhere except home, only if hasCompletedOnboarding and userId exists */}
           <BackButton
-            isVisible={
-              isSwipeRoute &&
-              (hasCompletedOnboarding ||
-                (selectedCategories.size >= 3 && userId === null))
-            }
+            isVisible={!isHomeRoute && hasCompletedOnboarding && !!userId}
           />
 
           {/* Profile button - floating icon in top-right corner */}

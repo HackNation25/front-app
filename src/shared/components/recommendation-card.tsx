@@ -6,12 +6,16 @@ interface RecommendationCardProps {
   place: Place
   index: number
   currentIndex: number
+  onShowOnMap?: () => void
+  onGoToSwipe?: () => void
 }
 
 export function RecommendationCard({
   place,
   index,
   currentIndex,
+  onShowOnMap,
+  onGoToSwipe,
 }: RecommendationCardProps) {
   const isVisible = Math.abs(index - currentIndex) <= 1
 
@@ -70,17 +74,37 @@ export function RecommendationCard({
 
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <div className="flex items-start gap-3 mb-3">
-            <MapPin
-              className="w-5 h-5 text-primary-300 flex-shrink-0 mt-0.5"
-              aria-hidden="true"
-            />
-            <div>
-              <h3 className="text-2xl font-bold mb-1">{place.name}</h3>
+          <div className="mb-3">
+            <h3 className="text-2xl font-bold mb-1">{place.name}</h3>
+            {onShowOnMap ? (
+              <div className="flex items-center gap-3 flex-wrap">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onShowOnMap()
+                  }}
+                  className="text-sm text-primary-300 font-medium hover:text-primary-200 transition-colors flex items-center gap-1 underline"
+                >
+                  <MapPin className="w-4 h-4" />
+                  <span>Pokaż na mapie</span>
+                </button>
+                {onGoToSwipe && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onGoToSwipe()
+                    }}
+                    className="text-sm text-primary-300 font-medium hover:text-primary-200 transition-colors"
+                  >
+                    Przejdź do wyboru
+                  </button>
+                )}
+              </div>
+            ) : (
               <p className="text-sm text-foreground-200 font-medium">
                 {place.location}
               </p>
-            </div>
+            )}
           </div>
           {place.description && (
             <p className="text-sm text-foreground-200 leading-relaxed">

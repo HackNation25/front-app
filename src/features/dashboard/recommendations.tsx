@@ -7,13 +7,15 @@ import { RecommendationCard } from '@/shared/components/recommendation-card'
 import type { Place } from '@/shared/types/place'
 import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 import { $api } from '@/shared/api/client'
+import { useNavigate } from '@tanstack/react-router'
 
 export function Recommendations() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { width: containerWidth } = useElementSize(containerRef)
   const { userId } = useUserSessionContext()
+  const navigate = useNavigate()
 
-  // Fetch recommendations from API (same as swipe route)
+  // Fetch recommendations from API - refetch on mount but keep cache
   const { data: recommendations, isLoading } = $api.useQuery(
     'get',
     '/recommendation',
@@ -27,6 +29,9 @@ export function Recommendations() {
     },
     {
       enabled: !!userId,
+      staleTime: 0, // Always consider data stale to allow refetch
+      gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+      refetchOnMount: true, // Always refetch on mount
     }
   )
 
@@ -68,7 +73,10 @@ export function Recommendations() {
       : 0
 
   return (
-    <section className="w-full py-6" aria-labelledby="recommendations-heading">
+    <section
+      className="w-full max-w-full py-6 lg:max-w-[500px] xl:max-w-[500px]"
+      aria-labelledby="recommendations-heading"
+    >
       <h2
         id="recommendations-heading"
         className="text-2xl font-bold mb-6 px-4 text-accent-800"
@@ -77,14 +85,14 @@ export function Recommendations() {
       </h2>
       <div
         ref={containerRef}
-        className="relative overflow-x-hidden overflow-y-visible w-full py-4"
+        className="relative overflow-x-hidden overflow-y-visible w-full max-w-full lg:max-w-[500px] xl:max-w-[500px] py-4"
         role="region"
         aria-label={`Slider rekomendacji, slajd ${currentIndex + 1} z ${places.length}`}
         aria-live="polite"
         aria-atomic="true"
       >
         <motion.div
-          className="flex"
+          className="flex max-w-full"
           animate={{
             x,
           }}
@@ -117,6 +125,19 @@ export function Recommendations() {
                 place={place}
                 index={index}
                 currentIndex={currentIndex}
+                onShowOnMap={() => {
+                  navigate({
+                    to: '/map',
+                    search: {
+                      poiId: place.id,
+                    },
+                  })
+                }}
+                onGoToSwipe={() => {
+                  navigate({
+                    to: '/swipe',
+                  })
+                }}
               />
             ))
           )}

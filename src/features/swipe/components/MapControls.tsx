@@ -16,7 +16,7 @@ export function MapControls() {
   return (
     <>
       {/* Control buttons */}
-      <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+      <div className="absolute top-[86px] right-4 z-[1000] flex flex-col gap-2">
         {/* Zoom In */}
         <button
           onClick={() => map.zoomIn()}

@@ -58,7 +58,7 @@ function ProfileLayout() {
                     onClick={() => setShowConfirmation(true)}
                     className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-foreground-800"
                   >
-                    Resetuj LocalStorage
+                    Resetuj Dane Aplikacji
                   </motion.button>
                 ) : (
                   <motion.div
