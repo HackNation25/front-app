@@ -54,7 +54,7 @@ export function ProfileCategorySelection() {
       // Map selected categories from API to choices format
       const choices = value.categories.map((categoryId, index) => ({
         category_id: categoryId,
-        choice: String(1 + index),
+        choice: '1',
       }))
 
       const requestBody = {
