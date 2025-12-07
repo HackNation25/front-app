@@ -4,14 +4,14 @@ import {
   IconRoute,
   IconMapPin,
   IconPlayerPlay,
-  type TablerIconsProps,
+  type Icon,
 } from '@tabler/icons-react'
 
 export interface NavigationItem {
   path: string
   label: string
   ariaLabel: string
-  icon: (props: TablerIconsProps) => JSX.Element
+  icon: Icon
 }
 
 export const NAVIGATION_ROUTES = {
