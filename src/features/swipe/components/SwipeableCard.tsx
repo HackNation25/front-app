@@ -20,6 +20,7 @@ interface SwipeableCardProps {
   triggerSwipe?: 'left' | 'right' | null
   stackPosition?: number
   isDraggable: boolean
+  disabled?: boolean
 }
 
 const SWIPE_THRESHOLD = 100
@@ -37,6 +38,7 @@ export function SwipeableCard({
   triggerSwipe,
   stackPosition,
   isDraggable,
+  disabled = false,
 }: SwipeableCardProps) {
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-200, 200], [-25, 25])
@@ -57,6 +59,8 @@ export function SwipeableCard({
     _: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
   ) => {
+    if (disabled) return
+
     if (info.offset.x > SWIPE_THRESHOLD) {
       setExitX(500)
       onSwipeRight()
@@ -74,7 +78,7 @@ export function SwipeableCard({
         cursor: 'grab',
         willChange: 'transform',
       }}
-      drag={isDraggable ? 'x' : false}
+      drag={isDraggable && !disabled ? 'x' : false}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={handleDragEnd}
       whileDrag={{ cursor: 'grabbing' }}

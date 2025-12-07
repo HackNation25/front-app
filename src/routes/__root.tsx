@@ -3,6 +3,7 @@ import {
   createRootRouteWithContext,
   useMatchRoute,
   Outlet,
+  redirect,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
@@ -17,12 +18,69 @@ import { NAVIGATION_ROUTES } from '@/shared/const/navigation'
 import { LayoutProvider } from '@/shared/contexts/layout-context'
 import { ProfileButtonFeature } from '@/features/layout/profile-button'
 import { ScreenSizeBlocker } from '@/shared/components/screen-size-blocker'
+import { useUserSessionContext } from '@/shared/contexts/user-session-context'
 
 interface MyRouterContext {
   queryClient: QueryClient
+  userId: string | null
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: ({ context, location }) => {
+    // Sprawdź liczbę swipów z localStorage
+    let swipeCount = 0
+
+    if (typeof window !== 'undefined') {
+      const storedSwipeCount = localStorage.getItem('swipeCount')
+      if (storedSwipeCount) {
+        try {
+          swipeCount = parseInt(storedSwipeCount, 10)
+          if (isNaN(swipeCount)) swipeCount = 0
+        } catch {
+          swipeCount = 0
+        }
+      }
+    }
+
+    // Jeśli swipeCount < 3, blokuj nawigację niezależnie od userId
+    if (swipeCount < 3) {
+      // Sprawdź kategorie z localStorage
+      let hasCategories = false
+
+      if (typeof window !== 'undefined') {
+        const storedCategories = localStorage.getItem('selectedCategories')
+        if (storedCategories) {
+          try {
+            const parsed = JSON.parse(storedCategories)
+            hasCategories = Array.isArray(parsed) && parsed.length >= 3
+          } catch {
+            hasCategories = false
+          }
+        }
+      }
+
+      // Jeśli ma kategorie, pozwól tylko na /profile/settings i /swipe
+      if (hasCategories) {
+        if (
+          location.pathname !== '/profile/settings' &&
+          location.pathname !== '/swipe'
+        ) {
+          throw redirect({
+            to: '/swipe',
+          })
+        }
+      }
+      // Jeśli nie ma kategorii, pozwól tylko na /profile/settings
+      else {
+        if (location.pathname !== '/profile/settings') {
+          throw redirect({
+            to: '/profile/settings',
+          })
+        }
+      }
+    }
+    // Jeśli swipeCount >= 3, pozwól na wszystkie routy (niezależnie od userId)
+  },
   component: RootComponent,
 })
 
@@ -33,7 +91,13 @@ function RootComponent() {
     fuzzy: false,
   })
 
+  const { userId, selectedCategories, swipeCount } = useUserSessionContext()
   const [screenWidth, setScreenWidth] = useState(0)
+
+  // Sprawdź czy użytkownik może używać pełnej aplikacji
+  // Pokazuj navbar i umożliwiaj nawigację tylko jeśli swipeCount >= 3
+  // (niezależnie od userId - nawet jeśli ma userId, ale swipeCount < 3, nie pokazuj navbar)
+  const hasCompletedOnboarding = swipeCount >= 3
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -99,13 +163,19 @@ function RootComponent() {
           </div>
 
           {/* Navbar wrapper with Activity and Framer Motion animations */}
-          <NavigationBarWrapper isVisible={!isSwipeRoute} />
+          <NavigationBarWrapper isVisible={hasCompletedOnboarding} />
 
-          {/* Back button - appears only on /swipe route */}
-          <BackButton isVisible={isSwipeRoute} />
+          {/* Back button - appears on /swipe route if user has completed onboarding OR if has categories but no userId */}
+          <BackButton
+            isVisible={
+              isSwipeRoute &&
+              (hasCompletedOnboarding ||
+                (selectedCategories.size >= 3 && userId === null))
+            }
+          />
 
           {/* Profile button - floating icon in top-right corner */}
-          <ProfileButtonFeature />
+          {hasCompletedOnboarding && <ProfileButtonFeature />}
         </MobileWrapper>
       </LayoutProvider>
 

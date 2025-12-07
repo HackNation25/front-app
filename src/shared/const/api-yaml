@@ -1,0 +1,515 @@
+openapi: 3.0.0
+paths:
+  /user/profile:
+    post:
+      operationId: UserProfileController_create
+      parameters: []
+      requestBody:
+        required: true
+        description: Payload for creating a user profile
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserProfileDto'
+            examples:
+              default:
+                summary: Example payload
+                value:
+                  choices:
+                    - category_id: 8a49f1b5-9a42-4a1f-9c8e-3f6f5c9f1a2b
+                      choice: '1'
+                    - category_id: 3c2a7f12-5d3e-4b9a-8e6f-2b1c9d8f7a6e
+                      choice: '2'
+      responses:
+        '201':
+          description: ''
+      summary: Create a user profile
+      tags:
+        - user-profile
+  /user/profile/{id}:
+    get:
+      operationId: UserProfileController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: User profile id (UUID)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      summary: Get a user profile by id
+      tags:
+        - user-profile
+  /poi:
+    post:
+      operationId: PoiController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePoiDto'
+      responses:
+        '201':
+          description: POI created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoiResponseDto'
+        '400':
+          description: Bad request
+      summary: Create a new POI
+      tags:
+        - POI
+    get:
+      operationId: PoiController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: List of all POIs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoiResponseDto'
+      summary: Get all POIs
+      tags:
+        - POI
+  /poi/{uuid}:
+    get:
+      operationId: PoiController_findOne
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: POI found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoiResponseDto'
+        '404':
+          description: POI not found
+      summary: Get a POI by UUID
+      tags:
+        - POI
+    put:
+      operationId: PoiController_update
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePoiDto'
+      responses:
+        '200':
+          description: POI updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoiResponseDto'
+        '404':
+          description: POI not found
+      summary: Update a POI
+      tags:
+        - POI
+    delete:
+      operationId: PoiController_remove
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: POI deleted successfully
+        '404':
+          description: POI not found
+      summary: Delete a POI
+      tags:
+        - POI
+  /category/{id}:
+    get:
+      operationId: CategoryController_getById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Category ID (UUID)
+          schema:
+            example: 8a49f1b5-9a42-4a1f-9c8e-3f6f5c9f1a2b
+            type: string
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryEntity'
+      summary: Get a category by id
+      tags:
+        - category
+  /category:
+    post:
+      operationId: CategoryController_create
+      parameters: []
+      requestBody:
+        required: true
+        description: Payload for creating a category
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryDto'
+            examples:
+              default:
+                summary: Simple example
+                value:
+                  name: Sports
+                  image_url: https://cdn.example.com/images/categories/sports.png
+      responses:
+        '201':
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryEntity'
+        '400':
+          description: Validation error
+      summary: Create a new category
+      tags:
+        - category
+  /recommendation:
+    get:
+      operationId: RecommendationController_getRecommendations
+      parameters:
+        - name: userId
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: limit
+          required: true
+          in: query
+          schema:
+            type: number
+      responses:
+        '201':
+          description: Recommendations fetched successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoiResponseDto'
+        '400':
+          description: Bad request
+      summary: Get recommendations based on user preferences
+      tags:
+        - RECOMMENDATION
+  /poi-decision/user/{userProfileId}:
+    get:
+      operationId: PoiDecisionController_getByUser
+      parameters:
+        - name: userProfileId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: latitude
+          required: false
+          in: query
+          description: Current user latitude
+          schema:
+            type: number
+        - name: longitude
+          required: false
+          in: query
+          description: Current user longitude
+          schema:
+            type: number
+      responses:
+        '200':
+          description: List of decisions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoiDecisionResponseDto'
+      summary: Get all decisions by user profile
+      tags:
+        - POI-Decision
+  /poi-decision:
+    post:
+      operationId: PoiDecisionController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePoiDecisionDto'
+      responses:
+        '201':
+          description: Decision created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoiDecisionResponseDto'
+      summary: Create a new POI decision
+      tags:
+        - POI-Decision
+info:
+  title: Odkryj Bydgoszcz API
+  description: Odkrywaj miasto na swoich zasadach.
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    ChoiceDto:
+      type: object
+      properties:
+        category_id:
+          type: string
+          description: Category identifier as UUID
+          example: 8a49f1b5-9a42-4a1f-9c8e-3f6f5c9f1a2b
+        choice:
+          type: string
+          description: Choice code as string
+          example: '1'
+        categoryWeight:
+          type: number
+          description: Category weight as number
+          example: 1
+    CreateUserProfileDto:
+      type: object
+      properties:
+        choices:
+          description: User choices payload as an array of choices
+          example:
+            - category_id: 8a49f1b5-9a42-4a1f-9c8e-3f6f5c9f1a2b
+              choice: '1'
+            - category_id: 3c2a7f12-5d3e-4b9a-8e6f-2b1c9d8f7a6e
+              choice: '2'
+          type: array
+          items:
+            $ref: '#/components/schemas/ChoiceDto'
+    CreatePoiDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the POI
+          example: Historic City Center
+        shortDescription:
+          type: string
+          description: Short description of the POI
+          example: Beautiful historic center with medieval architecture
+        categoryId:
+          type: string
+          description: Category UUID
+          example: 7987b9c5-7416-432d-ad61-71ebf143725f
+        longDescription:
+          type: string
+          description: Long description of the POI
+          example: >-
+            The historic city center features well-preserved medieval
+            architecture, cobblestone streets, and numerous cultural landmarks
+            dating back to the 14th century.
+        imageUrl:
+          type: string
+          description: URL to the image of the POI
+          example: https://example.com/images/poi.jpg
+        popularity:
+          type: number
+          description: Popularity score (0-100)
+          example: 85
+          minimum: 0
+          maximum: 100
+        locationX:
+          type: number
+          description: Location coordinates (x, y)
+          example: 18
+        locationY:
+          type: number
+          description: Y coordinate (latitude)
+          example: 53
+      required:
+        - name
+        - shortDescription
+        - categoryId
+        - longDescription
+        - imageUrl
+        - popularity
+        - locationX
+        - locationY
+    PoiResponseDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: Name of the POI
+          example: Historic City Center
+        shortDescription:
+          type: string
+          description: Short description of the POI
+          example: Beautiful historic center with medieval architecture
+        longDescription:
+          type: string
+          description: Long description of the POI
+          example: >-
+            The historic city center features well-preserved medieval
+            architecture...
+        imageUrl:
+          type: string
+          description: URL to the image of the POI
+          example: https://example.com/images/poi.jpg
+        popularity:
+          type: number
+          description: Popularity score (0-100)
+          example: 85
+        locationX:
+          type: number
+          description: X coordinate (longitude)
+          example: 18
+        locationY:
+          type: number
+          description: Y coordinate (latitude)
+          example: 53
+      required:
+        - uuid
+        - name
+        - shortDescription
+        - longDescription
+        - imageUrl
+        - popularity
+        - locationX
+        - locationY
+    UpdatePoiDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the POI
+          example: Historic City Center
+        shortDescription:
+          type: string
+          description: Short description of the POI
+          example: Beautiful historic center with medieval architecture
+        longDescription:
+          type: string
+          description: Long description of the POI
+          example: >-
+            The historic city center features well-preserved medieval
+            architecture...
+        imageUrl:
+          type: string
+          description: URL to the image of the POI
+          example: https://example.com/images/poi.jpg
+        popularity:
+          type: number
+          description: Popularity score (0-100)
+          example: 85
+          minimum: 0
+          maximum: 100
+        locationX:
+          type: number
+          description: Location coordinates (x, y)
+          example: 18
+        locationY:
+          type: number
+          description: Y coordinate (latitude)
+          example: 53
+    CategoryEntity:
+      type: object
+      properties: {}
+    CreateCategoryDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-friendly category name
+          example: Sports
+        image_url:
+          type: string
+          description: Publicly accessible URL to the category image
+          example: https://picsum.photos/200/300
+      required:
+        - name
+        - image_url
+    PoiDecisionResponseDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Decision UUID
+        poiId:
+          type: string
+          description: POI UUID
+        userProfileId:
+          type: string
+          description: User Profile UUID
+        createAt:
+          format: date-time
+          type: string
+          description: Creation timestamp
+        modifiedAt:
+          format: date-time
+          type: string
+          description: Last modified timestamp
+        decision:
+          type: boolean
+          description: Decision value
+        poi:
+          description: Embedded POI object
+          allOf:
+            - $ref: '#/components/schemas/PoiResponseDto'
+        distanceMeters:
+          type: number
+          description: Distance from provided coordinates to POI (meters)
+      required:
+        - uuid
+        - poiId
+        - userProfileId
+        - createAt
+        - modifiedAt
+        - decision
+    CreatePoiDecisionDto:
+      type: object
+      properties:
+        poiId:
+          type: string
+          description: POI UUID
+          example: 94e1e0db-294e-4109-b11c-9e33d3fd6174
+        userProfileId:
+          type: string
+          description: User Profile UUID
+          example: a3def291-1cda-4cdc-ba1a-8b0d121be858
+        decision:
+          type: boolean
+          description: Decision value
+          example: true
+      required:
+        - poiId
+        - userProfileId
+        - decision

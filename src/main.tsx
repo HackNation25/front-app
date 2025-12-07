@@ -1,8 +1,13 @@
-import { StrictMode } from 'react'
+import { StrictMode, useMemo, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { Toaster } from 'react-hot-toast'
 
 import * as TanStackQueryProvider from './shared/integrations/tanstack-query/root-provider.tsx'
+import {
+  UserSessionProvider,
+  useUserSessionContext,
+} from './shared/contexts/user-session-context'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -17,6 +22,7 @@ const router = createRouter({
   routeTree,
   context: {
     ...TanStackQueryProviderContext,
+    userId: null as string | null,
   },
   defaultPreload: 'intent',
   scrollRestoration: true,
@@ -31,15 +37,38 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Component that provides router context with userId
+function RouterProviderWrapper() {
+  const { userId } = useUserSessionContext()
+
+  const routerContext = useMemo(
+    () => ({
+      ...TanStackQueryProviderContext,
+      userId,
+    }),
+    [userId]
+  )
+
+  // Invalidate router when userId changes
+  useEffect(() => {
+    router.invalidate()
+  }, [userId])
+
+  return <RouterProvider router={router} context={routerContext} />
+}
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-        <RouterProvider router={router} />
-      </TanStackQueryProvider.Provider>
+      <UserSessionProvider>
+        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+          <RouterProviderWrapper />
+          <Toaster position="top-right" />
+        </TanStackQueryProvider.Provider>
+      </UserSessionProvider>
     </StrictMode>
   )
 }
