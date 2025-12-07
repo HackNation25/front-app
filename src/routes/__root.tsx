@@ -27,7 +27,7 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     // Sprawdź liczbę swipów z localStorage
     let swipeCount = 0
 

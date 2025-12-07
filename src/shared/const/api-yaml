@@ -142,30 +142,9 @@ paths:
       summary: Delete a POI
       tags:
         - POI
-  /category/{id}:
-    get:
-      operationId: CategoryController_getById
-      parameters:
-        - name: id
-          required: true
-          in: path
-          description: Category ID (UUID)
-          schema:
-            example: 8a49f1b5-9a42-4a1f-9c8e-3f6f5c9f1a2b
-            type: string
-      responses:
-        '200':
-          description: Category found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CategoryEntity'
-      summary: Get a category by id
-      tags:
-        - category
   /category:
     get:
-      operationId: CategoryController_findAll
+      operationId: CategoryController_getAll
       parameters: []
       responses:
         '200':
@@ -195,6 +174,7 @@ paths:
                 value:
                   name: Sports
                   image_url: https://cdn.example.com/images/categories/sports.png
+                  colorHex: '#FF00FF'
       responses:
         '201':
           description: Category created
@@ -205,6 +185,27 @@ paths:
         '400':
           description: Validation error
       summary: Create a new category
+      tags:
+        - category
+  /category/{id}:
+    get:
+      operationId: CategoryController_getById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Category ID (UUID)
+          schema:
+            example: 8a49f1b5-9a42-4a1f-9c8e-3f6f5c9f1a2b
+            type: string
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryEntity'
+      summary: Get a category by id
       tags:
         - category
   /recommendation:
@@ -465,12 +466,17 @@ components:
           type: string
           description: Human-friendly category name
           example: Sports
+        colorHex:
+          type: string
+          description: 'Hex color code for the category (e.g., #RRGGBB)'
+          example: '#FF5733'
         image_url:
           type: string
           description: Publicly accessible URL to the category image
           example: https://picsum.photos/200/300
       required:
         - name
+        - colorHex
         - image_url
     PoiDecisionResponseDto:
       type: object
